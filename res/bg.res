@@ -1,0 +1,1 @@
+IMAGE bga "bg\braco_8bpp.png" NONE
