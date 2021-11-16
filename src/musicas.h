@@ -28,6 +28,7 @@ typedef struct // Cria uma STRUCT para armazenar os dados de uma nota
 
 const u32 tempos_sonic[434];
 const Nota notas_sonic[434];
+const u16 duracao_sonic[434];
 const u8 velocidade_sonic;
 
 

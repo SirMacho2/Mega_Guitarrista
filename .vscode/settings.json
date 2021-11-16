@@ -3,5 +3,9 @@
     "${env:GDK}\\res",
     "res",
     "inc"
-]
+],
+"files.associations": {
+    "musicas.h": "c",
+    "stdlib.h": "c"
+}
 }

@@ -12,13 +12,14 @@
 #include "timer.h"
 #include "sound.h"
 
-#define SFX_ERROR            64
+#define SFX_ERROR 64
 
 #define LARGURA 320
 #define ALTURA 224
 #define ALTURA_MIRA 180
 
-Sprite *bt, *btr,*btr2,*btg,*btg2,*bty,*bty2;
+Sprite *btr2,*btg2,*bty2;
+Sprite *barra_r, *barra_g,*barra_y;
 
 
 char text[64];
@@ -55,7 +56,7 @@ int main()
 	btg2 = SPR_addSprite(&btG2 , VERDE_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
 	bty2 = SPR_addSprite(&btY2 , AMARELO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
 
-
+    // barra_r = SPR_addSprite(&barraR , VEMELHO_X +10, ALTURA_MIRA -7, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
  
 
     //adicona notas
@@ -63,14 +64,28 @@ int main()
     VDP_setPalette(PAL2, btR.palette->data);
     
     
-    
-    
     Sprite *spritesNotas[100];
     s16 posicoesX[100];
     s16 posicoesY[100];
+
+    Sprite *spritesBarrasR[100];
+    s16 posicoesXBarraR[100];
+    s16 posicoesYBarraR[100];
+    s16 durationBarraR[100];
+    u16 spriteBarraRIndex = 0;
+    u16 primeiraBarraR = 0;
+    u16 j;
+
+    Sprite *spritesBarrasG[28];
+    s16 posicoesXBarraG[28];
+    s16 posicoesYBarraG[28];
+
+    Sprite *spritesBarrasY[28];
+    s16 posicoesXBarraY[28];
+    s16 posicoesYBarraY[28];
+
     u16 spriteIndex = 0;
     u16 nota_index = 0;
-    u32 tempo = 0;
     u16 i;
     u16 primeiroSprite = 0;
     
@@ -81,16 +96,13 @@ int main()
     
     s16 placar = 0;
 
-    bool negativeA = 0;
-    bool negativeB = 0;
-    bool negativeC = 0;
 
     const u32 init_time = getTick();
     bool start_music = 0;
 
     while(1)
     {
-
+        
         if(getTick() - init_time >= 300 && !start_music)
         {
             XGM_startPlay(sonic_music);
@@ -119,12 +131,50 @@ int main()
                 posicoesY[spriteIndex] = 0;
                 spritesNotas[spriteIndex++] = SPR_addSprite(&btR , VEMELHO_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
                 nota_index++;
+
+                if (duracao_sonic[nota_index] > 8)
+                {
+                    posicoesXBarraR[spriteBarraRIndex] = VEMELHO_X+10;
+                    posicoesYBarraR[spriteBarraRIndex] = 0;
+                    durationBarraR[spriteBarraRIndex] = duracao_sonic[nota_index]-8;
+                    spritesBarrasR[spriteBarraRIndex++] = SPR_addSprite(&barraR , VEMELHO_X+10,0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    
+                }
             }
         }
 
         
-        notas_atualizaPosicao(posicoesY, velocidade_sonic, spriteIndex);
+       
+        notas_atualizaPosicao(posicoesYBarraR, velocidade_sonic, spriteBarraRIndex);
 
+        if(spriteBarraRIndex > 0)
+        {
+            if(posicoesYBarraR[spriteBarraRIndex-1] == 8  && durationBarraR[spriteBarraRIndex -1 ] > 0) 
+            {
+                posicoesXBarraR[spriteBarraRIndex] = VEMELHO_X+10;
+                posicoesYBarraR[spriteBarraRIndex] = 0;
+                durationBarraR[spriteBarraRIndex] = durationBarraR[spriteBarraRIndex -1] - 32;
+                spritesBarrasR[spriteBarraRIndex++] = SPR_addSprite(&barraR , VEMELHO_X+10,0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+            }
+        }
+        
+
+        for(i = primeiraBarraR; i < spriteBarraRIndex; i++ )
+        {
+            SPR_setPosition(spritesBarrasR[i],  posicoesXBarraR[i], posicoesYBarraR[i]);
+            if(posicoesYBarraR[i] > ALTURA)
+            {
+                SPR_releaseSprite(spritesBarrasR[i]);
+                primeiraBarraR++;
+                if(primeiraBarraR == spriteBarraRIndex)
+                {
+                    primeiraBarraR =0;
+                    spriteBarraRIndex = 0;
+                }
+            }
+        }
+
+        notas_atualizaPosicao(posicoesY, velocidade_sonic, spriteIndex);
         for (i= primeiroSprite; i < spriteIndex; i++)
         {
             SPR_setPosition(spritesNotas[i], posicoesX[i], posicoesY[i]);
@@ -138,73 +188,65 @@ int main()
                     spriteIndex = 0;
                 }
             }
-            if(posicoesY[i] > ALTURA_MIRA - 15 && posicoesY[i] < ALTURA_MIRA+37 )
+            if(posicoesY[i] > ALTURA_MIRA - 15 && posicoesY[i] < ALTURA_MIRA + 15 )
             {
                 if(SPR_isVisible(spritesNotas[i], 1))
                 {
                     // sobe placar e deixa sprite invisivel 
-                    if( posicoesX[i] == AMARELO_X && J1A && (J1ACount + 50) > (u16) getTick())
+                    if( posicoesX[i] == AMARELO_X && J1A )
                     {
                         placar++;
-                        negativeA = 1;
+                        J1A = 0;
                         SPR_setVisibility(spritesNotas[i], HIDDEN);
                     }
-                    if(posicoesX[i] == VERDE_X && J1B && (J1BCount + 50) > (u16) getTick())
+                    if(posicoesX[i] == VERDE_X && J1B)
                     {
                         placar++;
-                        negativeB = 1;
+                        J1B = 0;
                         SPR_setVisibility(spritesNotas[i], HIDDEN);
                     }
-                    if (posicoesX[i] ==  VEMELHO_X && J1C && (J1CCount + 50) > (u16) getTick())
+                    if (posicoesX[i] ==  VEMELHO_X && J1C )
                     {
                         placar++;
-                        negativeC = 1;
+                        J1C = 0;
                         SPR_setVisibility(spritesNotas[i], HIDDEN);
                     }
-                }
-            }
-            else
-            {
-                if (J1A && negativeA == 0)
-                {
-                    placar--;
-                    negativeA = 1;
-                }
-                else if (negativeA == 1 && J1A == 0)
-                {
-                    negativeA = 0;
-                }
-                
-                if (J1B && negativeB == 0)
-                {
-                    placar--;
-                    negativeB = 1;
-                }
-                else if (negativeB == 1 && J1B == 0)
-                {
-                    negativeB = 0;
-                }
-                
-                if (J1C && negativeC == 0)
-                {
-                    placar--;
-                    negativeC = 1;
-                }
-                else if (negativeC == 1 && J1C == 0)
-                {
-                    negativeC = 0;
                 }
             }
         }
+
+        if (J1A && (J1ACount + 50) > (u16) getTick())                   
+        {
+            placar--;
+            J1A = 0;
+            XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
+        }
+        if (J1B && (J1BCount + 50) > (u16) getTick())
+        {
+            placar--;
+            J1B = 0;
+            XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
+        } 
+        if (J1C && (J1CCount + 50) > (u16) getTick())
+        {
+            placar--;
+            J1C = 0;
+            XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
+        }
+            
+
        
 
         // draw screen
-        tempo = tempo + velocidade_sonic;
+    
+        // sprintf(text, "p= %d, tp= %lu,i= %u", placar,  tempos_sonic[nota_index], nota_index);
+        // VDP_drawText(text, 0,0);
+        if(spriteBarraRIndex > 0)
+        {
+            sprintf(text,  "j= %d",  spriteBarraRIndex);
+            VDP_drawText(text, 0,1);
+        }
         
-        sprintf(text, "p= %d, t= %lu, tp= %lu,i= %u", placar, tempo,  tempos_sonic[nota_index], nota_index);
-        VDP_drawText(text, 0,0);
-        sprintf(text,  "m= %d, si=%d, ps=%d",  XGM_isPlaying(), spriteIndex, primeiroSprite);
-        VDP_drawText(text, 0,1);
 		SPR_update();
         SYS_doVBlankProcess();
     }
