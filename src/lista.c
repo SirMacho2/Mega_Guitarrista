@@ -1,22 +1,10 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <memory.h>
-#include <genesis.h>
-
-// define a estrutura do nodo
-typedef struct Temp
-{
-    Sprite *sprite;
-    s16 x;
-    s16 y;
-    struct Temp *prox;
-} LNotas;
-// cria o inicio da lista
-LNotas *inicio = NULL;
+#include "lista.h"
+#include "controles.h"
+#include "timer.h"
+#include "musicas.h"
 //--------------------------------------------------------
 // Funcao que define a lista como vazia.
-void CriaLista(LNotas *inicio)
+void CriaLista()
 {
     inicio = NULL;
 }
@@ -25,7 +13,7 @@ void CriaLista(LNotas *inicio)
 // Retorna:
 //	0 - se nao ha'  memoria para inserir
 //	1 - se conseguiu inserir
-int Insere(Sprite *sprite, s16 x, s16 y)
+u8 Insere(Sprite *sprite, s16 x, s16 y)
 {
     LNotas *p;
     p = (LNotas *)MEM_alloc(sizeof(LNotas));
@@ -34,10 +22,12 @@ int Insere(Sprite *sprite, s16 x, s16 y)
         // erro de alocação
         return 0;
     }
+    
     p->sprite = sprite;
     p->x = x;
     p->y = y;
     p->prox = NULL;
+
     if (inicio == NULL)
         inicio = p;
     else
@@ -52,7 +42,7 @@ int Insere(Sprite *sprite, s16 x, s16 y)
 // Retorna:
 //	0 - se a lista ja'  estava vazia
 //	1 - se conseguiu remover
-int RemoveDoInicio()
+u8 RemoveDoInicio()
 {
     LNotas *ptr;
     if (inicio == NULL)
@@ -72,71 +62,85 @@ int RemoveDoInicio()
 // Retorna:
 //	- NULL caso nao encontre
 //	- ponteiro para o NODO onde esta' o dado, se conseguir encontrar
-LNotas *BuscaDado(int dado)
-{
-    LNotas *ptr;
-    if (inicio == NULL)
-    {
-        return NULL; // Lista Vazia
-    }
-    // Caso a lista nao esteja vazia
-    ptr = inicio;
-    while (ptr != NULL)
-    {
-        if (ptr->info == dado) // achou !!
-            return (ptr);      // retorna um ponteiro para
-                               //o inicio da lista
-        else
-            ptr = ptr->prox;
-    }
-    return NULL;
-}
+// LNotas *BuscaDado(int dado)
+// {
+//     LNotas *ptr;
+//     if (inicio == NULL)
+//     {
+//         return NULL; // Lista Vazia
+//     }
+//     // Caso a lista nao esteja vazia
+//     ptr = inicio;
+//     while (ptr != NULL)
+//     {
+//         if (ptr->info == dado) // achou !!
+//             return (ptr);      // retorna um ponteiro para
+//                                //o inicio da lista
+//         else
+//             ptr = ptr->prox;
+//     }
+//     return NULL;
+// }
 //--------------------------------------------------------
 // Funcao que remove um elemento especificado por 'dado'
 // Retorna:
 //	0 - se nao conseguiu achar
 //	1 - se conseguiu remover
-int RemoveDado(int dado)
+// int RemoveDado(int dado)
+// {
+//     LNotas *ptr, *antes;
+//     if (inicio == NULL)
+//     {
+//         return 0; // Lista vazia !!!
+//     }
+//     else
+//     { // Caso a lista nao esteja vazia
+//         ptr = inicio;
+//         antes = inicio;
+//         while (ptr != NULL)
+//         {
+//             if (ptr->info == dado) // achou !!
+//             {
+//                 if (ptr == inicio) // se esta removendo o primeiro da lista
+//                 {
+//                     inicio = inicio->prox;
+//                     SPR_releaseSprite(ptr->sprite);
+//                     MEM_free(ptr);
+//                     return 1; // removeu !!
+//                 }
+//                 else // esta removendo do meio da lista
+//                 {
+//                     antes->prox = ptr->prox; // Refaz o encadeamento
+//                     SPR_releaseSprite(ptr->sprite);
+//                     MEM_free(ptr); // Libera a area do nodo
+//                     return 1;      // removeu !!
+//                 }
+//             }
+//             else // continua procurando no prox. nodo
+//             {
+//                 antes = ptr;
+//                 ptr = ptr->prox;
+//             }
+//         }
+//         return 0; // Nao achou !!!
+//     }
+// }
+
+u16 tamanho_lista()
 {
-    LNotas *ptr, *antes;
+    u16 tamanho = 0;
     if (inicio == NULL)
+        return 0;
+    LNotas *ptr = inicio;
+    for (tamanho = 0; ptr != NULL; tamanho++)
     {
-        return 0; // Lista vazia !!!
+        ptr = ptr->prox;
     }
-    else
-    { // Caso a lista nao esteja vazia
-        ptr = inicio;
-        antes = inicio;
-        while (ptr != NULL)
-        {
-            if (ptr->info == dado) // achou !!
-            {
-                if (ptr == inicio) // se esta removendo o primeiro da lista
-                {
-                    inicio = inicio->prox;
-                    SPR_releaseSprite(ptr->sprite);
-                    MEM_free(ptr);
-                    return 1; // removeu !!
-                }
-                else // esta removendo do meio da lista
-                {
-                    antes->prox = ptr->prox; // Refaz o encadeamento
-                    SPR_releaseSprite(ptr->sprite);
-                    MEM_free(ptr); // Libera a area do nodo
-                    return 1;      // removeu !!
-                }
-            }
-            else // continua procurando no prox. nodo
-            {
-                antes = ptr;
-                ptr = ptr->prox;
-            }
-        }
-        return 0; // Nao achou !!!
-    }
+    return tamanho;
+
 }
 
-void atualiza_posicao(LNotas *inicio, u8 velocidade)
+s16 atualiza_posicao(u8 velocidade, s16 placar)
 {
     LNotas *ptr, *antes;
     if (inicio == NULL)
@@ -150,19 +154,24 @@ void atualiza_posicao(LNotas *inicio, u8 velocidade)
         while (ptr != NULL)
         {
             ptr->y = ptr->y + velocidade;
+            SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
             if (ptr->y > ALTURA) // passou do limite
             {
                 if (ptr == inicio) // se esta removendo o primeiro da lista
                 {
-                    inicio = inicio->prox;
+                    // inicio = inicio->prox;
+                    inicio = NULL;
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr);
+                    return placar;
                 }
                 else // esta removendo do meio da lista
                 {
                     antes->prox = ptr->prox; // Refaz o encadeamento
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr); // Libera a area do nodo
+                    // ptr = antes->prox;
+                    break;
                 }
             }
             if(ptr->y > ALTURA_MIRA - 15 && ptr->y < ALTURA_MIRA + 15 )
@@ -170,19 +179,19 @@ void atualiza_posicao(LNotas *inicio, u8 velocidade)
                 if(SPR_isVisible(ptr->sprite, 1))
                 {
                     // sobe placar e deixa sprite invisivel 
-                    if( posicoesX[i] == AMARELO_X && J1A )
+                    if( ptr->x == AMARELO_X && J1A )
                     {
                         placar++;
                         J1A = 0;
                         SPR_setVisibility(ptr->sprite, HIDDEN);
                     }
-                    if(posicoesX[i] == VERDE_X && J1B)
+                    if(ptr->x == VERDE_X && J1B)
                     {
                         placar++;
                         J1B = 0;
                         SPR_setVisibility(ptr->sprite, HIDDEN);
                     }
-                    if (posicoesX[i] ==  VEMELHO_X && J1C )
+                    if (ptr->x ==  VEMELHO_X && J1C )
                     {
                         placar++;
                         J1C = 0;
@@ -195,4 +204,5 @@ void atualiza_posicao(LNotas *inicio, u8 velocidade)
             ptr = ptr->prox;
         }
     }
+    return placar;
 }

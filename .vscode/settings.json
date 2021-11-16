@@ -6,6 +6,7 @@
 ],
 "files.associations": {
     "musicas.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "controles.h": "c"
 }
 }

@@ -9,14 +9,13 @@
 #include "bg.h"
 #include "bt.h"
 #include "controles.h"
-#include "timer.h"
+#include <timer.h>
 #include "sound.h"
+#include "lista.h"
 
 #define SFX_ERROR 64
 
-#define LARGURA 320
-#define ALTURA 224
-#define ALTURA_MIRA 180
+
 
 Sprite *btr2,*btg2,*bty2;
 Sprite *barra_r, *barra_g,*barra_y;
@@ -64,30 +63,30 @@ int main()
     VDP_setPalette(PAL2, btR.palette->data);
     
     
-    Sprite *spritesNotas[100];
-    s16 posicoesX[100];
-    s16 posicoesY[100];
+   
 
-    Sprite *spritesBarrasR[100];
-    s16 posicoesXBarraR[100];
-    s16 posicoesYBarraR[100];
-    s16 durationBarraR[100];
-    u16 spriteBarraRIndex = 0;
-    u16 primeiraBarraR = 0;
-    u16 j;
+    // Sprite *spritesBarrasR[100];
+    // s16 posicoesXBarraR[100];
+    // s16 posicoesYBarraR[100];
+    // s16 durationBarraR[100];
+    // u16 spriteBarraRIndex = 0;
+    // u16 primeiraBarraR = 0;
+    // u16 j;
 
-    Sprite *spritesBarrasG[28];
-    s16 posicoesXBarraG[28];
-    s16 posicoesYBarraG[28];
+    // Sprite *spritesBarrasG[28];
+    // s16 posicoesXBarraG[28];
+    // s16 posicoesYBarraG[28];
 
-    Sprite *spritesBarrasY[28];
-    s16 posicoesXBarraY[28];
-    s16 posicoesYBarraY[28];
+    // Sprite *spritesBarrasY[28];
+    // s16 posicoesXBarraY[28];
+    // s16 posicoesYBarraY[28];
 
-    u16 spriteIndex = 0;
+    // u16 spriteIndex = 0;
+    
+    // u16 i;
+    // u16 primeiroSprite = 0;
+
     u16 nota_index = 0;
-    u16 i;
-    u16 primeiroSprite = 0;
     
 
     // VDP_setTextPalette(PAL0);
@@ -100,6 +99,8 @@ int main()
     const u32 init_time = getTick();
     bool start_music = 0;
 
+    CriaLista();
+    u8 ret = 0;
     while(1)
     {
         
@@ -113,107 +114,60 @@ int main()
         {   
             if(notas_sonic[nota_index] & AMARELA)
             {
-                posicoesX[spriteIndex] = AMARELO_X;
-                posicoesY[spriteIndex] = 0;
-                spritesNotas[spriteIndex++] = SPR_addSprite(&btY , AMARELO_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-                nota_index++;
+                ret = Insere(SPR_addSprite(&btY , AMARELO_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_X, 0);
             }
             else if(notas_sonic[nota_index] & VERDE)
             {
-                posicoesX[spriteIndex] = VERDE_X;
-                posicoesY[spriteIndex] = 0;
-                spritesNotas[spriteIndex++] = SPR_addSprite(&btG , VERDE_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-                nota_index++;
+                ret = Insere(SPR_addSprite(&btG , VERDE_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VERDE_X, 0);
             }
             else if(notas_sonic[nota_index] & VEMELHA)
             {
-                posicoesX[spriteIndex] = VEMELHO_X;
-                posicoesY[spriteIndex] = 0;
-                spritesNotas[spriteIndex++] = SPR_addSprite(&btR , VEMELHO_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-                nota_index++;
+                ret = Insere(SPR_addSprite(&btR , VEMELHO_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_X, 0);
 
-                if (duracao_sonic[nota_index] > 8)
-                {
-                    posicoesXBarraR[spriteBarraRIndex] = VEMELHO_X+10;
-                    posicoesYBarraR[spriteBarraRIndex] = 0;
-                    durationBarraR[spriteBarraRIndex] = duracao_sonic[nota_index]-8;
-                    spritesBarrasR[spriteBarraRIndex++] = SPR_addSprite(&barraR , VEMELHO_X+10,0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                // if (duracao_sonic[nota_index] > 8)
+                // {
+                //     posicoesXBarraR[spriteBarraRIndex] = VEMELHO_X+10;
+                //     posicoesYBarraR[spriteBarraRIndex] = 0;
+                //     durationBarraR[spriteBarraRIndex] = duracao_sonic[nota_index]-8;
+                //     spritesBarrasR[spriteBarraRIndex++] = SPR_addSprite(&barraR , VEMELHO_X+10,0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
                     
-                }
+                // }
             }
+            nota_index++;
         }
 
         
        
-        notas_atualizaPosicao(posicoesYBarraR, velocidade_sonic, spriteBarraRIndex);
+        // notas_atualizaPosicao(posicoesYBarraR, velocidade_sonic, spriteBarraRIndex);
 
-        if(spriteBarraRIndex > 0)
-        {
-            if(posicoesYBarraR[spriteBarraRIndex-1] == 8  && durationBarraR[spriteBarraRIndex -1 ] > 0) 
-            {
-                posicoesXBarraR[spriteBarraRIndex] = VEMELHO_X+10;
-                posicoesYBarraR[spriteBarraRIndex] = 0;
-                durationBarraR[spriteBarraRIndex] = durationBarraR[spriteBarraRIndex -1] - 32;
-                spritesBarrasR[spriteBarraRIndex++] = SPR_addSprite(&barraR , VEMELHO_X+10,0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-            }
-        }
+        // if(spriteBarraRIndex > 0)
+        // {
+        //     if(posicoesYBarraR[spriteBarraRIndex-1] == 8  && durationBarraR[spriteBarraRIndex -1 ] > 0) 
+        //     {
+        //         posicoesXBarraR[spriteBarraRIndex] = VEMELHO_X+10;
+        //         posicoesYBarraR[spriteBarraRIndex] = 0;
+        //         durationBarraR[spriteBarraRIndex] = durationBarraR[spriteBarraRIndex -1] - 32;
+        //         spritesBarrasR[spriteBarraRIndex++] = SPR_addSprite(&barraR , VEMELHO_X+10,0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+        //     }
+        // }
         
 
-        for(i = primeiraBarraR; i < spriteBarraRIndex; i++ )
-        {
-            SPR_setPosition(spritesBarrasR[i],  posicoesXBarraR[i], posicoesYBarraR[i]);
-            if(posicoesYBarraR[i] > ALTURA)
-            {
-                SPR_releaseSprite(spritesBarrasR[i]);
-                primeiraBarraR++;
-                if(primeiraBarraR == spriteBarraRIndex)
-                {
-                    primeiraBarraR =0;
-                    spriteBarraRIndex = 0;
-                }
-            }
-        }
+        // for(i = primeiraBarraR; i < spriteBarraRIndex; i++ )
+        // {
+        //     SPR_setPosition(spritesBarrasR[i],  posicoesXBarraR[i], posicoesYBarraR[i]);
+        //     if(posicoesYBarraR[i] > ALTURA)
+        //     {
+        //         SPR_releaseSprite(spritesBarrasR[i]);
+        //         primeiraBarraR++;
+        //         if(primeiraBarraR == spriteBarraRIndex)
+        //         {
+        //             primeiraBarraR =0;
+        //             spriteBarraRIndex = 0;
+        //         }
+        //     }
+        // }
 
-        notas_atualizaPosicao(posicoesY, velocidade_sonic, spriteIndex);
-        for (i= primeiroSprite; i < spriteIndex; i++)
-        {
-            SPR_setPosition(spritesNotas[i], posicoesX[i], posicoesY[i]);
-            if(posicoesY[i] > ALTURA)
-            {
-                SPR_releaseSprite(spritesNotas[i]);
-                primeiroSprite++;
-                if(primeiroSprite == spriteIndex)
-                {
-                    primeiroSprite =0;
-                    spriteIndex = 0;
-                }
-            }
-            if(posicoesY[i] > ALTURA_MIRA - 15 && posicoesY[i] < ALTURA_MIRA + 15 )
-            {
-                if(SPR_isVisible(spritesNotas[i], 1))
-                {
-                    // sobe placar e deixa sprite invisivel 
-                    if( posicoesX[i] == AMARELO_X && J1A )
-                    {
-                        placar++;
-                        J1A = 0;
-                        SPR_setVisibility(spritesNotas[i], HIDDEN);
-                    }
-                    if(posicoesX[i] == VERDE_X && J1B)
-                    {
-                        placar++;
-                        J1B = 0;
-                        SPR_setVisibility(spritesNotas[i], HIDDEN);
-                    }
-                    if (posicoesX[i] ==  VEMELHO_X && J1C )
-                    {
-                        placar++;
-                        J1C = 0;
-                        SPR_setVisibility(spritesNotas[i], HIDDEN);
-                    }
-                }
-            }
-        }
+        placar =  atualiza_posicao(velocidade_sonic, placar);
 
         if (J1A && (J1ACount + 50) > (u16) getTick())                   
         {
@@ -238,14 +192,16 @@ int main()
        
 
         // draw screen
-    
-        // sprintf(text, "p= %d, tp= %lu,i= %u", placar,  tempos_sonic[nota_index], nota_index);
-        // VDP_drawText(text, 0,0);
-        if(spriteBarraRIndex > 0)
-        {
-            sprintf(text,  "j= %d",  spriteBarraRIndex);
-            VDP_drawText(text, 0,1);
-        }
+        u16 tamanho = tamanho_lista(inicio);
+        sprintf(text, "p = %d, tam = %d", placar,  tamanho);
+        ret = 0;
+        VDP_clearTextLine(0);
+        VDP_drawText(text, 0,0);
+        // if(spriteBarraRIndex > 0)
+        // {
+        //     sprintf(text,  "j= %d",  spriteBarraRIndex);
+        //     VDP_drawText(text, 0,1);
+        // }
         
 		SPR_update();
         SYS_doVBlankProcess();
