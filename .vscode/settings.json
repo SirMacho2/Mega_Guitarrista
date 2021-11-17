@@ -1,12 +1,18 @@
 { 
-    "C_Cpp.default.includePath": ["${env:GDK}\\inc",
-    "${env:GDK}\\res",
-    "res",
-    "inc"
-],
-"files.associations": {
-    "musicas.h": "c",
-    "stdlib.h": "c",
-    "controles.h": "c"
-}
+    "C_Cpp.default.includePath": [
+        "${env:GDK}\\inc",
+        "${env:GDK}\\res",
+        "res",
+        "inc",
+        "C:\\sgdk165\\inc",
+        "C:\\sgdk165\\res",
+    ],
+    "files.associations": {
+        "musicas.h": "c",
+        "stdlib.h": "c",
+        "controles.h": "c",
+        "genesis.h": "c",
+        "font.h": "c",
+        "vdp_tile.h": "c"
+    }   
 }

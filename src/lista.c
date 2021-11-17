@@ -2,18 +2,19 @@
 #include "controles.h"
 #include "timer.h"
 #include "musicas.h"
+#include "bt.h"
 //--------------------------------------------------------
 // Funcao que define a lista como vazia.
-void CriaLista()
+void CriaLista_Nota()
 {
-    inicio = NULL;
+    inicio_Nota = NULL;
 }
 //--------------------------------------------------------
 // Funcao que insere um elemento do inicio da lista.
 // Retorna:
 //	0 - se nao ha'  memoria para inserir
 //	1 - se conseguiu inserir
-u8 Insere(Sprite *sprite, s16 x, s16 y)
+u8 Insere_Nota(Sprite *sprite, s16 x, s16 y)
 {
     LNotas *p;
     p = (LNotas *)MEM_alloc(sizeof(LNotas));
@@ -28,139 +29,119 @@ u8 Insere(Sprite *sprite, s16 x, s16 y)
     p->y = y;
     p->prox = NULL;
 
-    if (inicio == NULL)
-        inicio = p;
+    if (inicio_Nota == NULL)
+        inicio_Nota = p;
     else
     {
-        p->prox = inicio;
-        inicio = p;
+        p->prox = inicio_Nota;
+        inicio_Nota = p;
     }
     return 1;
 }
+
+
+
 //--------------------------------------------------------
-// Funcao que remove um elemento do inicio da lista.
-// Retorna:
-//	0 - se a lista ja'  estava vazia
-//	1 - se conseguiu remover
-u8 RemoveDoInicio()
+// Funcao que define a lista como vazia.
+void CriaLista_Barra()
 {
-    LNotas *ptr;
-    if (inicio == NULL)
+    inicio_Barra = NULL;
+}
+//--------------------------------------------------------
+// Funcao que insere um elemento do inicio da lista.
+// Retorna:
+//	0 - se nao ha'  memoria para inserir
+//	1 - se conseguiu inserir
+u8 Insere_Barra(Sprite *sprite, s16 x, s16 y, s16 duracao)
+{
+    LBarras *p;
+    
+
+    p = (LBarras *)MEM_alloc(sizeof(LBarras));
+    if (p == NULL)
+    {
+        // erro de alocação
         return 0;
+    }
+    
+    p->sprite = sprite;
+    p->x = x;
+    p->y = y;
+    p->duracao = duracao;
+    p->prox = NULL;
+
+    if (inicio_Barra == NULL)
+        inicio_Barra = p;
     else
     {
-        ptr = inicio;
-        inicio = inicio->prox;
-        SPR_releaseSprite(ptr->sprite);
-        MEM_free(ptr);
-        return 1;
+        LBarras *atual = inicio_Barra;
+        while ( atual->prox != NULL)
+        {
+            atual = atual->prox;
+        }
+        atual->prox = p;
     }
+    return 1;
 }
 
 //--------------------------------------------------------
-// Funcao que busca um elemento na lista.
+// Funcao diz o tamanho da lista.
 // Retorna:
-//	- NULL caso nao encontre
-//	- ponteiro para o NODO onde esta' o dado, se conseguir encontrar
-// LNotas *BuscaDado(int dado)
-// {
-//     LNotas *ptr;
-//     if (inicio == NULL)
-//     {
-//         return NULL; // Lista Vazia
-//     }
-//     // Caso a lista nao esteja vazia
-//     ptr = inicio;
-//     while (ptr != NULL)
-//     {
-//         if (ptr->info == dado) // achou !!
-//             return (ptr);      // retorna um ponteiro para
-//                                //o inicio da lista
-//         else
-//             ptr = ptr->prox;
-//     }
-//     return NULL;
-// }
-//--------------------------------------------------------
-// Funcao que remove um elemento especificado por 'dado'
-// Retorna:
-//	0 - se nao conseguiu achar
-//	1 - se conseguiu remover
-// int RemoveDado(int dado)
-// {
-//     LNotas *ptr, *antes;
-//     if (inicio == NULL)
-//     {
-//         return 0; // Lista vazia !!!
-//     }
-//     else
-//     { // Caso a lista nao esteja vazia
-//         ptr = inicio;
-//         antes = inicio;
-//         while (ptr != NULL)
-//         {
-//             if (ptr->info == dado) // achou !!
-//             {
-//                 if (ptr == inicio) // se esta removendo o primeiro da lista
-//                 {
-//                     inicio = inicio->prox;
-//                     SPR_releaseSprite(ptr->sprite);
-//                     MEM_free(ptr);
-//                     return 1; // removeu !!
-//                 }
-//                 else // esta removendo do meio da lista
-//                 {
-//                     antes->prox = ptr->prox; // Refaz o encadeamento
-//                     SPR_releaseSprite(ptr->sprite);
-//                     MEM_free(ptr); // Libera a area do nodo
-//                     return 1;      // removeu !!
-//                 }
-//             }
-//             else // continua procurando no prox. nodo
-//             {
-//                 antes = ptr;
-//                 ptr = ptr->prox;
-//             }
-//         }
-//         return 0; // Nao achou !!!
-//     }
-// }
-
-u16 tamanho_lista()
+//	tamanho da lista
+u16 tamanhoLista_Nota(u8 lista)
 {
     u16 tamanho = 0;
-    if (inicio == NULL)
-        return 0;
-    LNotas *ptr = inicio;
-    for (tamanho = 0; ptr != NULL; tamanho++)
+    if ( lista == 0)
     {
-        ptr = ptr->prox;
+        if (inicio_Nota == NULL)
+            return 0;
+        LNotas *ptr = inicio_Nota;
+        for (tamanho = 0; ptr != NULL; tamanho++)
+        {
+            ptr = ptr->prox;
+        }
     }
+    else if(lista == 1)
+    {
+        if (inicio_Barra == NULL)
+            return 0;
+        LBarras *ptr = inicio_Barra;
+        for (tamanho = 0; ptr != NULL; tamanho++)
+        {
+            ptr = ptr->prox;
+        }
+    }
+    
     return tamanho;
 
 }
 
-s16 atualiza_posicao(u8 velocidade, s16 placar)
+
+//--------------------------------------------------------
+// Funcao que atualiza a posição das notas e detecta se o usuario aperto o botão na hora correta.
+// Retorna:
+//placar
+s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
 {
     LNotas *ptr, *antes;
-    if (inicio == NULL)
+    if (inicio_Nota == NULL)
     {
-        return 0; // Lista vazia !!!
+        return placar; // Lista vazia !!!
     }
     else
     {
-        ptr = inicio;
-        antes = inicio;
+        ptr = inicio_Nota;
+        antes = inicio_Nota;
         while (ptr != NULL)
         {
             ptr->y = ptr->y + velocidade;
             SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
             if (ptr->y > ALTURA) // passou do limite
             {
-                if (ptr == inicio) // se esta removendo o primeiro da lista
+                if (ptr == inicio_Nota) // se esta removendo o primeiro da lista
                 {
                     // inicio = inicio->prox;
-                    inicio = NULL;
+                    inicio_Nota = NULL;
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr);
                     return placar;
@@ -206,3 +187,118 @@ s16 atualiza_posicao(u8 velocidade, s16 placar)
     }
     return placar;
 }
+
+
+s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
+{
+    LBarras *ptr, *antes;
+    if (inicio_Barra == NULL)
+    {
+        return placar; // Lista vazia !!!
+    }
+    else
+    {
+        ptr = inicio_Barra;
+        antes = inicio_Barra;
+        while (ptr != NULL)
+        {
+            ptr->y = ptr->y + velocidade;
+            SPR_setPosition(ptr->sprite,  ptr->x, ptr->y); 
+            if(ptr->duracao > 0 && ptr->y == 8)
+            {
+                if(ptr->x == AMARELO_X + 10)
+                {
+                    Insere_Barra(SPR_addSprite(&barraY , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-80);
+                }
+                if(ptr->x == VERDE_X + 10)
+                {
+                    Insere_Barra(SPR_addSprite(&barraG , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-80);
+                }
+                if(ptr->x == VEMELHO_X + 10)
+                {
+                    Insere_Barra(SPR_addSprite(&barraR , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-80);
+                }
+            }
+            if (ptr->y > ALTURA) // passou do limite
+            {
+                if (ptr == inicio_Barra) // se esta removendo o primeiro da lista
+                {
+                    inicio_Barra = inicio_Barra->prox;
+                    SPR_releaseSprite(ptr->sprite);
+                    MEM_free(ptr);
+                }
+                else // esta removendo do meio da lista
+                {
+                    antes->prox = ptr->prox; // Refaz o encadeamento
+                    SPR_releaseSprite(ptr->sprite);
+                    MEM_free(ptr); // Libera a area do nodo
+                    ptr = antes->prox;
+                }
+            }
+            if(ptr->y > ALTURA_MIRA - 15 && ptr->y < ALTURA_MIRA + 15 )
+            {
+                u16 JOY1 = JOY_readJoypad(JOY_1);
+                if(SPR_isVisible(ptr->sprite, 1))
+                {
+                    // sobe placar e deixa sprite invisivel                         200
+                    if( ptr->x == AMARELO_X +10)
+                    {
+                        if ((JOY1 & BUTTON_A))
+                        {
+                            placar++;
+                            SPR_setVisibility(ptr->sprite, HIDDEN);
+                        }
+                        
+                    }
+                    if(ptr->x == VERDE_X +10 )
+                    {
+                        if ((JOY1 & BUTTON_B))
+                        {
+                            placar++;
+                            SPR_setVisibility(ptr->sprite, HIDDEN);
+                        }
+                    }
+                    if (ptr->x ==  VEMELHO_X +10)
+                    {
+                         if ((JOY1 & BUTTON_C))
+                        {
+                            placar++;
+                            SPR_setVisibility(ptr->sprite, HIDDEN);
+                        }
+                    }
+                }
+            }
+
+            antes = ptr;
+            ptr = ptr->prox;
+        }
+    }
+    return placar;
+}
+
+        // if(spriteBarraRIndex > 0)
+        // {
+        //     if(posicoesYBarraR[spriteBarraRIndex-1] == 8  && durationBarraR[spriteBarraRIndex -1 ] > 0) 
+        //     {
+        //         posicoesXBarraR[spriteBarraRIndex] = VEMELHO_X+10;
+        //         posicoesYBarraR[spriteBarraRIndex] = 0;
+        //         durationBarraR[spriteBarraRIndex] = durationBarraR[spriteBarraRIndex -1] - 32;
+        //         spritesBarrasR[spriteBarraRIndex++] = SPR_addSprite(&barraR , VEMELHO_X+10,0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+        //     }
+        // }
+        
+
+        // for(i = primeiraBarraR; i < spriteBarraRIndex; i++ )
+        // {
+        //     SPR_setPosition(spritesBarrasR[i],  posicoesXBarraR[i], posicoesYBarraR[i]);
+        //     if(posicoesYBarraR[i] > ALTURA)
+        //     {
+        //         SPR_releaseSprite(spritesBarrasR[i]);
+        //         primeiraBarraR++;
+        //         if(primeiraBarraR == spriteBarraRIndex)
+        //         {
+        //             primeiraBarraR =0;
+        //             spriteBarraRIndex = 0;
+        //         }
+        //     }
+        // }

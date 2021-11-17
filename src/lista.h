@@ -18,11 +18,28 @@ typedef struct Temp
     struct Temp *prox;
 } LNotas;
 
-LNotas *inicio;
+// define a estrutura do nodo
+typedef struct TempB
+{
+    Sprite *sprite;
+    s16 x;
+    s16 y;
+    s16 duracao;
+    struct TempB *prox;
+} LBarras;
 
-void CriaLista();
-u8 Insere(Sprite *sprite, s16 x, s16 y);
-s16 atualiza_posicao(u8 velocidade, s16 placar);
-u16 tamanho_lista();
+
+
+LNotas *inicio_Nota;
+LBarras *inicio_Barra;
+
+void CriaLista_Nota();
+u8 Insere_Nota(Sprite *sprite, s16 x, s16 y);
+s16 atualizaPosicao_Nota(u8 velocidade, s16 placar);
+u16 tamanhoLista_Nota(u8 lista);
+
+void CriaLista_Barra();
+u8 Insere_Barra(Sprite *sprite, s16 x, s16 y, s16 duracao);
+s16 atualizaPosicao_Barra(u8 velocidade, s16 placar);
 
 #endif
