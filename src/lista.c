@@ -120,7 +120,7 @@ u16 tamanhoLista_Nota(u8 lista)
 //--------------------------------------------------------
 // Funcao que atualiza a posição das notas e detecta se o usuario aperto o botão na hora correta.
 // Retorna:
-//placar
+//numero de notas acertadas, ou -1 se passou uma nota sem acertar;
 s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
 {
     LNotas *ptr, *antes;
@@ -138,6 +138,10 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
             SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
             if (ptr->y > ALTURA) // passou do limite
             {
+                if(SPR_isVisible(ptr->sprite, 1))
+                {
+                    placar --;
+                }
                 if (ptr == inicio_Nota) // se esta removendo o primeiro da lista
                 {
                     // inicio = inicio->prox;
@@ -188,7 +192,10 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
     return placar;
 }
 
-
+//--------------------------------------------------------
+// Funcao que atualiza a posição das barras e detecta se o usuario aperto o botão na hora correta.
+// Retorna:
+//pontuação referente as barras;
 s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
 {
     LBarras *ptr, *antes;
@@ -275,30 +282,3 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
     }
     return placar;
 }
-
-        // if(spriteBarraRIndex > 0)
-        // {
-        //     if(posicoesYBarraR[spriteBarraRIndex-1] == 8  && durationBarraR[spriteBarraRIndex -1 ] > 0) 
-        //     {
-        //         posicoesXBarraR[spriteBarraRIndex] = VEMELHO_X+10;
-        //         posicoesYBarraR[spriteBarraRIndex] = 0;
-        //         durationBarraR[spriteBarraRIndex] = durationBarraR[spriteBarraRIndex -1] - 32;
-        //         spritesBarrasR[spriteBarraRIndex++] = SPR_addSprite(&barraR , VEMELHO_X+10,0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-        //     }
-        // }
-        
-
-        // for(i = primeiraBarraR; i < spriteBarraRIndex; i++ )
-        // {
-        //     SPR_setPosition(spritesBarrasR[i],  posicoesXBarraR[i], posicoesYBarraR[i]);
-        //     if(posicoesYBarraR[i] > ALTURA)
-        //     {
-        //         SPR_releaseSprite(spritesBarrasR[i]);
-        //         primeiraBarraR++;
-        //         if(primeiraBarraR == spriteBarraRIndex)
-        //         {
-        //             primeiraBarraR =0;
-        //             spriteBarraRIndex = 0;
-        //         }
-        //     }
-        // }

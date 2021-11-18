@@ -64,13 +64,14 @@ int main()
     VDP_setPaletteColor(15,RGB24_TO_VDPCOLOR(0xff0000));
     
     s16 placar = 0;
+    u8 consecutivas = 0;
+    u8 multiplicador = 1;
 
     const u32 init_time = getTick();
     bool start_music = 0;
 
     CriaLista_Nota();
     CriaLista_Barra();
-    u8 ret = 0;
     while(1)
     {
         
@@ -84,7 +85,7 @@ int main()
         {   
             if(notas_sonic[nota_index] & AMARELA)
             {
-                ret = Insere_Nota(SPR_addSprite(&btY , AMARELO_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_X, 0);
+                Insere_Nota(SPR_addSprite(&btY , AMARELO_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_X, 0);
                 if(duracao_sonic[nota_index] > 0)
                 {
                     Insere_Barra(SPR_addSprite(&barraY , AMARELO_X+10, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_X+10, 0, duracao_sonic[nota_index]);
@@ -92,7 +93,7 @@ int main()
             }
             else if(notas_sonic[nota_index] & VERDE)
             {
-                ret = Insere_Nota(SPR_addSprite(&btG , VERDE_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VERDE_X, 0);
+                Insere_Nota(SPR_addSprite(&btG , VERDE_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VERDE_X, 0);
                 if(duracao_sonic[nota_index] > 0)
                 {
                     Insere_Barra(SPR_addSprite(&barraG , VERDE_X+10, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VERDE_X+10, 0, duracao_sonic[nota_index]);
@@ -100,7 +101,7 @@ int main()
             }
             else if(notas_sonic[nota_index] & VEMELHA)
             {
-                ret = Insere_Nota(SPR_addSprite(&btR , VEMELHO_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_X, 0);
+                Insere_Nota(SPR_addSprite(&btR , VEMELHO_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_X, 0);
                 if(duracao_sonic[nota_index] > 0)
                 {
                     Insere_Barra(SPR_addSprite(&barraR , VEMELHO_X+10, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_X+10, 0, duracao_sonic[nota_index]);
@@ -109,35 +110,59 @@ int main()
             nota_index++;
         }
 
-        placar =  atualizaPosicao_Barra(velocidade_sonic, placar);
-        placar =  atualizaPosicao_Nota(velocidade_sonic, placar);
+        s8 parcial = 0;
+        parcial = atualizaPosicao_Nota(velocidade_sonic, parcial);
+        if(parcial > 0)
+        {
+            placar = placar + multiplicador;
+            if (multiplicador < 4)
+            {
+                consecutivas++; 
+                if(consecutivas == 10)
+                {
+                    multiplicador ++;
+                    consecutivas = 0;
+                }
+            }
+        }
+        else if(parcial < 0)
+        {
+            consecutivas = 0;
+            multiplicador = 1;
+        }
+
+        parcial = 0;
+        parcial =  atualizaPosicao_Barra(velocidade_sonic, parcial);
+        placar = parcial * multiplicador + placar;
 
         if (J1A && (J1ACount + 50) > (u16) getTick())                   
         {
             placar--;
             J1A = 0;
+            consecutivas = 0;
+            multiplicador= 1;
             XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
         }
         if (J1B && (J1BCount + 50) > (u16) getTick())
         {
             placar--;
             J1B = 0;
+            consecutivas =0;
+            multiplicador= 1;
             XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
         } 
         if (J1C && (J1CCount + 50) > (u16) getTick())
         {
             placar--;
             J1C = 0;
+            consecutivas =0;
+            
             XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
         }
             
-
-       
-
         // draw screen
         u16 tamanho = tamanhoLista_Nota(1);
-        sprintf(text, "p = %3d, tam = %2d", placar,  tamanho);
-        ret = 0;
+        sprintf(text, "placar = %3d, consecutiva = %d, X%d", placar,  consecutivas, multiplicador);
         // VDP_clearTextLine(0);
         VDP_drawText(text, 0,0);
         
