@@ -6,6 +6,7 @@ void controle_iniciaVariaveis()
     J1A = 0;
     J1B = 0;
     J1C = 0;
+    J1S = 0;
     J1ACount = 0;
     J1BCount = 0;
     J1CCount = 0;
@@ -55,6 +56,18 @@ void controle_Handler(u16 joy, u16 changed, u16 state)
             else
             {
                 J1C = 0;
+            }
+        }
+        if (changed & BUTTON_START)
+        {
+            if(state & BUTTON_START )
+            {
+                J1S = 1;
+            }
+            // botão C solto
+            else
+            {
+                J1S = 0;
             }
         }
 	}

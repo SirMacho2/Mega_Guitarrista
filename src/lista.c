@@ -215,15 +215,15 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
             {
                 if(ptr->x == AMARELO_X + 10)
                 {
-                    Insere_Barra(SPR_addSprite(&barraY , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-80);
+                    Insere_Barra(SPR_addSprite(&barraY , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-45);
                 }
                 if(ptr->x == VERDE_X + 10)
                 {
-                    Insere_Barra(SPR_addSprite(&barraG , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-80);
+                    Insere_Barra(SPR_addSprite(&barraG , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-45);
                 }
                 if(ptr->x == VEMELHO_X + 10)
                 {
-                    Insere_Barra(SPR_addSprite(&barraR , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-80);
+                    Insere_Barra(SPR_addSprite(&barraR , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-45);
                 }
             }
             if (ptr->y > ALTURA) // passou do limite
@@ -242,7 +242,7 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                     ptr = antes->prox;
                 }
             }
-            if(ptr->y > ALTURA_MIRA - 15 && ptr->y < ALTURA_MIRA + 15 )
+            if(ptr->y > ALTURA_MIRA - 5 && ptr->y < ALTURA_MIRA + 7 )
             {
                 u16 JOY1 = JOY_readJoypad(JOY_1);
                 if(SPR_isVisible(ptr->sprite, 1))

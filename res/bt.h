@@ -11,5 +11,6 @@ extern const SpriteDefinition btY2;
 extern const SpriteDefinition barraR;
 extern const SpriteDefinition barraG;
 extern const SpriteDefinition barraY;
+extern const SpriteDefinition Cursor;
 
 #endif // _RES_BT_H_

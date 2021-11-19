@@ -9,3 +9,5 @@ SPRITE btY2 "bt\bt_y2.png" 4 4 NONE 1
 SPRITE barraR "bt\barra_r.png" 1 1 NONE 1
 SPRITE barraG "bt\barra_g.png" 1 1 NONE 1
 SPRITE barraY "bt\barra_y.png" 1 1 NONE 1
+
+SPRITE Cursor "bt\cursor.png" 1 1 NONE 1
