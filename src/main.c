@@ -59,10 +59,11 @@ int main()
     u8 multiplicador = 1;
 
     u32 init_time = getTick();
+    u32 pause_time = 0;
     bool start_music = 0;
     bool count_time = 0;
     u16 nota_index = 0;
-
+    bool resume = 0;
 
     enum States state = MENU_INICIAL;
     enum States state_anterior = -1;
@@ -95,6 +96,7 @@ int main()
         case MUSICA:
             if (state_anterior != state)
             {
+                
                 VDP_setPaletteColors(0, (u16*) palette_black, 64); // set all palettes to black
                 //bg_A
                 VDP_drawImageEx(BG_A, &bga, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, ind_tileset), 0, 0, FALSE, TRUE);
@@ -102,26 +104,34 @@ int main()
                 VDP_setPalette(PAL1, bga.palette->data);
                 VDP_setPalette(PAL2, btR.palette->data);
                 VDP_setPaletteColor(15,RGB24_TO_VDPCOLOR(0xff0000));
-                // bts_marca
-                btr2 = SPR_addSprite(&btR2 , VEMELHO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-                btg2 = SPR_addSprite(&btG2 , VERDE_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-                bty2 = SPR_addSprite(&btY2 , AMARELO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+
+                if (resume == 0)
+                {
+                        // bts_marca
+                    btr2 = SPR_addSprite(&btR2 , VEMELHO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    btg2 = SPR_addSprite(&btG2 , VERDE_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    bty2 = SPR_addSprite(&btY2 , AMARELO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
 
 
-                nota_index = 0;
-                placar = 0;
-                consecutivas = 0;
-                multiplicador = 1;
+                    nota_index = 0;
+                    placar = 0;
+                    consecutivas = 0;
+                    multiplicador = 1;
 
-                init_time = getTick();
-                start_music = 0;
-                count_time = 0;
-    
+                    init_time = getTick();
+                    start_music = 0;
+                    count_time = 0;
+                    pause_time =0;
 
 
-                CriaLista_Nota();
-                CriaLista_Barra();
-
+                    CriaLista_Nota();
+                    CriaLista_Barra();
+                }
+                else
+                {
+                    resume = 0;
+                }
+                
                 state_anterior = state;
             }
             if(getTick() - init_time >= 300 && !start_music)
@@ -212,6 +222,7 @@ int main()
             {
                 J1S = 0;
                 state = PAUSA;
+                pause_time = getTick();
             }
 
                 
@@ -271,25 +282,36 @@ int main()
                 J1A = 0;
                 J1B = 0;
                 J1C = 0;
+                //voltar
+                SPR_releaseSprite(cursor);
+                VDP_clearTextLine(14);
+                VDP_clearTextLine(15);
+                VDP_clearTextLine(16);
                 if(cursorY == 14)
                 {
-
+                    state = MUSICA;
+                    resume =1;
+                    init_time = getTick() - pause_time + init_time;
+                    XGM_resumePlay(sonic_music);
                 }
+                //sair
                 else if(cursorY == 15)
                 {
                     state = MENU_INICIAL;
                     limpa_listas();
-                    SPR_releaseSprite(cursor);
                     SPR_releaseSprite(btr2);
                     SPR_releaseSprite(btg2);
                     SPR_releaseSprite(bty2);
-                    VDP_clearTextLine(14);
-                    VDP_clearTextLine(15);
-                    VDP_clearTextLine(16);
                     XGM_stopPlay(sonic_music);
                 }
+                //reiniciar
                 else{
-
+                    state = MUSICA;
+                    limpa_listas();
+                    SPR_releaseSprite(btr2);
+                    SPR_releaseSprite(btg2);
+                    SPR_releaseSprite(bty2);
+                    XGM_stopPlay(sonic_music);
                 }
             }          
             break;
