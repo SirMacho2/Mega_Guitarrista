@@ -18,6 +18,6 @@ typedef struct
 // Opcao opcoes_pause[3];
 
 void mostra_menu_inicial();
-
+void mostra_menu_pausa();
 
 #endif

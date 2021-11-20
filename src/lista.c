@@ -17,6 +17,7 @@ void CriaLista_Nota()
 u8 Insere_Nota(Sprite *sprite, s16 x, s16 y)
 {
     LNotas *p;
+    // MEM_pack();
     p = (LNotas *)MEM_alloc(sizeof(LNotas));
     if (p == NULL)
     {
@@ -56,7 +57,7 @@ u8 Insere_Barra(Sprite *sprite, s16 x, s16 y, s16 duracao)
 {
     LBarras *p;
     
-
+    // MEM_pack();
     p = (LBarras *)MEM_alloc(sizeof(LBarras));
     if (p == NULL)
     {
@@ -281,4 +282,24 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
         }
     }
     return placar;
+}
+
+
+void limpa_listas()
+{
+    LNotas *ptr;
+    LBarras *ptr2;
+    for (ptr = inicio_Nota; ptr != NULL; ptr = inicio_Nota)
+    {
+        inicio_Nota = inicio_Nota->prox;
+        SPR_releaseSprite(ptr->sprite);
+        MEM_free(ptr);
+    }
+    
+    for (ptr2 = inicio_Barra; ptr2 != NULL; ptr2 = inicio_Barra)
+    {
+        inicio_Barra = inicio_Barra->prox;
+        SPR_releaseSprite(ptr2->sprite);
+        MEM_free(ptr2);
+    }
 }

@@ -7,6 +7,8 @@ void controle_iniciaVariaveis()
     J1B = 0;
     J1C = 0;
     J1S = 0;
+    J1BAIXO = 0;
+    J1CIMA = 0;
     J1ACount = 0;
     J1BCount = 0;
     J1CCount = 0;
@@ -70,5 +72,29 @@ void controle_Handler(u16 joy, u16 changed, u16 state)
                 J1S = 0;
             }
         }
+
+        if (changed & BUTTON_DOWN)
+        {
+            if(state & BUTTON_DOWN )
+            {
+                J1BAIXO = 1;
+            }
+            else
+            {
+                J1BAIXO = 0;
+            }
+        }
+        if (changed & BUTTON_UP)
+        {
+            if(state & BUTTON_UP )
+            {
+                J1CIMA = 1;
+            }
+            else
+            {
+                J1CIMA = 0;
+            }
+        }
+        
 	}
 }

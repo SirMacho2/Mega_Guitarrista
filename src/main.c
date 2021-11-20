@@ -61,7 +61,6 @@ int main()
     u32 init_time = getTick();
     bool start_music = 0;
     bool count_time = 0;
-    u32 total_time = 0;
     u16 nota_index = 0;
 
 
@@ -87,6 +86,7 @@ int main()
             }
             if(J1S)
             {
+                J1S = 0;
                 state = MUSICA;
                 SPR_releaseSprite(cursor);
                 VDP_clearTextLine(20);
@@ -116,7 +116,6 @@ int main()
                 init_time = getTick();
                 start_music = 0;
                 count_time = 0;
-                total_time = 0;
     
 
 
@@ -129,7 +128,6 @@ int main()
             {
                 XGM_startPlay(sonic_music);
                 XGM_setLoopNumber(4);
-                total_time = getTick() - init_time;
                 start_music = 1;
             }
             while(getTick() - init_time >= tempos_sonic[nota_index])
@@ -210,24 +208,90 @@ int main()
                 
                 XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
             }
-            if (placar == -1)
+            if(J1S)
             {
-                total_time = getTick() - total_time;
-                placar= -10;
+                J1S = 0;
+                state = PAUSA;
             }
+
                 
             // draw screen
-            u16 tamanho = tamanhoLista_Nota(1);
             sprintf(text, "placar = %3d, consecutiva = %d, X%d", placar,  consecutivas, multiplicador);
             // VDP_clearTextLine(0);
             VDP_drawText(text, 0,0);
-            sprintf(text, "tempo = %u", total_time);
-            VDP_drawText(text, 0,1);
             
             
             
             break;
         case PAUSA:
+            ;
+            s16 cursorY;
+            const s16 cursorX = 17*8;
+            if (state_anterior != state)
+            {
+                state_anterior = state;
+                VDP_clearTextLine(0);
+                mostra_menu_pausa();
+                VDP_setPalette(PAL3, Cursor.palette->data);
+                cursorY = 14;
+                cursor = SPR_addSprite(&Cursor , cursorX, cursorY*8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                XGM_pausePlay(sonic_music);
+                
+
+            }
+            if(J1BAIXO)
+            {
+                J1BAIXO = 0;
+                if (cursorY < 16)
+                {
+                    cursorY ++;
+                }
+                else
+                {
+                    cursorY = 14;
+                }
+                SPR_setPosition(cursor,  cursorX, cursorY*8);
+            }
+            if(J1CIMA)
+            {
+                J1CIMA = 0;
+                if (cursorY > 14)
+                {
+                    cursorY --;
+                }
+                else
+                {
+                    cursorY = 16;
+                }
+                SPR_setPosition(cursor,  cursorX , cursorY*8);
+            }
+            if(J1S|J1A|J1B|J1C)
+            {
+                J1S = 0;
+                J1A = 0;
+                J1B = 0;
+                J1C = 0;
+                if(cursorY == 14)
+                {
+
+                }
+                else if(cursorY == 15)
+                {
+                    state = MENU_INICIAL;
+                    limpa_listas();
+                    SPR_releaseSprite(cursor);
+                    SPR_releaseSprite(btr2);
+                    SPR_releaseSprite(btg2);
+                    SPR_releaseSprite(bty2);
+                    VDP_clearTextLine(14);
+                    VDP_clearTextLine(15);
+                    VDP_clearTextLine(16);
+                    XGM_stopPlay(sonic_music);
+                }
+                else{
+
+                }
+            }          
             break;
         }
         
