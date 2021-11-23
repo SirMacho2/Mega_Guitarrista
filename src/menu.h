@@ -3,7 +3,8 @@
 
 #include <genesis.h>
 
-#define NUM_MUSICAS 1
+#define NUM_MUSICAS 2
+#define NUM_OPCOES_PAUSA 3
 
 // define a estrutura das opções
 typedef struct 
@@ -13,11 +14,12 @@ typedef struct
     char texto[32];
 } Opcao;
 
-
-// Opcao opcoes_musicas[NUM_MUSICAS];
-// Opcao opcoes_pause[3];
+const Opcao opcoes_musicas[NUM_MUSICAS];
+const Opcao opcoes_pause[NUM_OPCOES_PAUSA];
 
 void mostra_menu_inicial();
 void mostra_menu_pausa();
+
+void mostra_menu(Opcao *opcoes, u8 tamanho);
 
 #endif

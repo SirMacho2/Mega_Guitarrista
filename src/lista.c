@@ -30,6 +30,8 @@ u8 Insere_Nota(Sprite *sprite, s16 x, s16 y)
     p->y = y;
     p->prox = NULL;
 
+    SPR_setDepth(sprite, SPR_MIN_DEPTH);
+
     if (inicio_Nota == NULL)
         inicio_Nota = p;
     else
@@ -70,6 +72,8 @@ u8 Insere_Barra(Sprite *sprite, s16 x, s16 y, s16 duracao)
     p->y = y;
     p->duracao = duracao;
     p->prox = NULL;
+
+    SPR_setDepth(sprite, SPR_MIN_DEPTH);
 
     if (inicio_Barra == NULL)
         inicio_Barra = p;
@@ -214,15 +218,15 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
             SPR_setPosition(ptr->sprite,  ptr->x, ptr->y); 
             if(ptr->duracao > 0 && ptr->y == 8)
             {
-                if(ptr->x == AMARELO_X + 10)
+                if(ptr->x == AMARELO_B_X)
                 {
                     Insere_Barra(SPR_addSprite(&barraY , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-45);
                 }
-                if(ptr->x == VERDE_X + 10)
+                if(ptr->x == VERDE_B_X)
                 {
                     Insere_Barra(SPR_addSprite(&barraG , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-45);
                 }
-                if(ptr->x == VEMELHO_X + 10)
+                if(ptr->x == VEMELHO_B_X)
                 {
                     Insere_Barra(SPR_addSprite(&barraR , ptr->x, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, 0, ptr->duracao-45);
                 }
@@ -249,7 +253,7 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                 if(SPR_isVisible(ptr->sprite, 1))
                 {
                     // sobe placar e deixa sprite invisivel                         200
-                    if( ptr->x == AMARELO_X +10)
+                    if( ptr->x == AMARELO_B_X)
                     {
                         if ((JOY1 & BUTTON_A))
                         {
@@ -258,7 +262,7 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                         }
                         
                     }
-                    if(ptr->x == VERDE_X +10 )
+                    if(ptr->x == VERDE_B_X )
                     {
                         if ((JOY1 & BUTTON_B))
                         {
@@ -266,7 +270,7 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                             SPR_setVisibility(ptr->sprite, HIDDEN);
                         }
                     }
-                    if (ptr->x ==  VEMELHO_X +10)
+                    if (ptr->x ==  VEMELHO_B_X)
                     {
                          if ((JOY1 & BUTTON_C))
                         {
