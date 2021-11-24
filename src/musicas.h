@@ -46,7 +46,7 @@ const Nota notas_sonic[434];
 const u16 duracao_sonic[434];
 const u16 tamanho_sonic;
 const u8 velocidade_sonic;
-const u8 delay_sonic;
+const u16 delay_sonic;
 
 
 const Nota notas_bib[223];
@@ -54,7 +54,7 @@ const u16 duracao_bib[223];
 const u32 tempos_bib[223];
 const u16 tamanho_bib;
 const u8 velocidade_bib;
-const u8 delay_bib;
+const u16 delay_bib;
 
 
 #endif

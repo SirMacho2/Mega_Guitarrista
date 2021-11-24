@@ -13,6 +13,10 @@
         "controles.h": "c",
         "genesis.h": "c",
         "font.h": "c",
-        "vdp_tile.h": "c"
+        "vdp_tile.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "bt.h": "c"
     }   
 }
