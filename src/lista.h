@@ -32,6 +32,7 @@ typedef struct TempB
 
 LNotas *inicio_Nota;
 LBarras *inicio_Barra;
+Sprite *fogoR, *fogoG, *fogoY;
 
 void CriaLista_Nota();
 u8 Insere_Nota(Sprite *sprite, s16 x, s16 y);
@@ -43,5 +44,7 @@ u8 Insere_Barra(Sprite *sprite, s16 x, s16 y, s16 duracao);
 s16 atualizaPosicao_Barra(u8 velocidade, s16 placar);
 
 void limpa_listas();
+
+void esconde_fogo();
 
 #endif

@@ -3,8 +3,8 @@
 
 #include <genesis.h>
 
-#define VEMELHO_X 200
-#define VERDE_X 141
+#define VEMELHO_X 201
+#define VERDE_X 142
 #define AMARELO_X 79
 
 #define VEMELHO_B_X VEMELHO_X +15
@@ -41,17 +41,17 @@ typedef enum // Cria uma ENUM para indetificar uma nota
 
 Musica cria_musica(	Nota *notas, s16 *tempos, u16 tamanho,	u8 velocidade);
 
-const u32 tempos_sonic[434];
-const Nota notas_sonic[434];
-const u16 duracao_sonic[434];
+u32 tempos_sonic[434];
+Nota notas_sonic[434];
+u16 duracao_sonic[434];
 const u16 tamanho_sonic;
 const u8 velocidade_sonic;
 const u16 delay_sonic;
 
 
-const Nota notas_bib[223];
-const u16 duracao_bib[223];
-const u32 tempos_bib[223];
+Nota notas_bib[223];
+u16 duracao_bib[223];
+u32 tempos_bib[223];
 const u16 tamanho_bib;
 const u8 velocidade_bib;
 const u16 delay_bib;

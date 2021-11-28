@@ -3,6 +3,12 @@
 #include "timer.h"
 #include "musicas.h"
 #include "bt.h"
+
+#define TEMPO_FOGO 100
+
+
+static u32 tempoFogoR = 0, tempoFogoG = 0, tempoFogoY = 0;
+
 //--------------------------------------------------------
 // Funcao que define a lista como vazia.
 void CriaLista_Nota()
@@ -174,22 +180,27 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                         placar++;
                         J1A = 0;
                         SPR_setVisibility(ptr->sprite, HIDDEN);
+                        SPR_setVisibility(fogoY, VISIBLE);
+                        tempoFogoY = getTick();
                     }
                     if(ptr->x == VERDE_X && J1B)
                     {
                         placar++;
                         J1B = 0;
                         SPR_setVisibility(ptr->sprite, HIDDEN);
+                        SPR_setVisibility(fogoG, VISIBLE);
+                        tempoFogoG = getTick();
                     }
                     if (ptr->x ==  VEMELHO_X && J1C )
                     {
                         placar++;
                         J1C = 0;
                         SPR_setVisibility(ptr->sprite, HIDDEN);
+                        SPR_setVisibility(fogoR, VISIBLE);
+                        tempoFogoR = getTick();
                     }
                 }
             }
-
             antes = ptr;
             ptr = ptr->prox;
         }
@@ -259,6 +270,8 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                         {
                             placar++;
                             SPR_setVisibility(ptr->sprite, HIDDEN);
+                            SPR_setVisibility(fogoY, VISIBLE);
+                            tempoFogoY = getTick();
                         }
                         
                     }
@@ -268,6 +281,8 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                         {
                             placar++;
                             SPR_setVisibility(ptr->sprite, HIDDEN);
+                            SPR_setVisibility(fogoG, VISIBLE);
+                            tempoFogoG = getTick();
                         }
                     }
                     if (ptr->x ==  VEMELHO_B_X)
@@ -276,6 +291,8 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                         {
                             placar++;
                             SPR_setVisibility(ptr->sprite, HIDDEN);
+                            SPR_setVisibility(fogoR, VISIBLE);
+                            tempoFogoR = getTick();
                         }
                     }
                 }
@@ -305,5 +322,22 @@ void limpa_listas()
         inicio_Barra = inicio_Barra->prox;
         SPR_releaseSprite(ptr2->sprite);
         MEM_free(ptr2);
+    }
+}
+
+void esconde_fogo()
+{
+    u32 tempo =  getTick();
+    if (tempo - tempoFogoR >= TEMPO_FOGO)
+    {
+        SPR_setVisibility(fogoR, HIDDEN);
+    }
+    if (tempo - tempoFogoG >= TEMPO_FOGO)
+    {
+        SPR_setVisibility(fogoG, HIDDEN);
+    }
+    if (tempo - tempoFogoY >= TEMPO_FOGO)
+    {
+        SPR_setVisibility(fogoY, HIDDEN);
     }
 }

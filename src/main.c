@@ -58,6 +58,7 @@ int main()
     u32 init_time = getTick();
     u32 pause_time = 0;
     bool start_music = 0;
+    bool notas_faltando = 1;
     u16 nota_index = 0;
     bool resume = 0;
 
@@ -177,8 +178,8 @@ int main()
                 //bg_A
                 // VDP_drawImageEx(BG_A, &bga, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
 
-                // VDP_setPlaneSize(32, 64, TRUE);
-                // VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
+                VDP_setPlaneSize(64, 64, TRUE);
+                VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 
                 VDP_drawImageEx(BG_A, &bga_s, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 5, 0, FALSE, TRUE);
 
@@ -193,9 +194,22 @@ int main()
                     btg2 = SPR_addSprite(&btG2, VERDE_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
                     bty2 = SPR_addSprite(&btY2, AMARELO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
 
+
+                    fogoR = SPR_addSprite(&Fogo, VEMELHO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    fogoG = SPR_addSprite(&Fogo, VERDE_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    fogoY = SPR_addSprite(&Fogo, AMARELO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+
+                    SPR_setVisibility(fogoR, HIDDEN);
+                    SPR_setVisibility(fogoG, HIDDEN);
+                    SPR_setVisibility(fogoY, HIDDEN);
+
                     SPR_setDepth(btr2, SPR_MAX_DEPTH);
                     SPR_setDepth(btg2, SPR_MAX_DEPTH);
                     SPR_setDepth(bty2, SPR_MAX_DEPTH);
+
+                    SPR_setDepth(fogoR, SPR_MIN_DEPTH);
+                    SPR_setDepth(fogoG, SPR_MIN_DEPTH);
+                    SPR_setDepth(fogoY, SPR_MIN_DEPTH);
 
                     nota_index = 0;
                     placar = 0;
@@ -205,6 +219,7 @@ int main()
                     init_time = getTick();
                     start_music = 0;
                     pause_time = 0;
+                    notas_faltando = 1;
 
                     switch (musica)
                     {
@@ -256,7 +271,7 @@ int main()
 
                 start_music = 1;
             }
-            while (getTick() - init_time >= tempos[nota_index])
+            while (notas_faltando && (getTick() - init_time >= tempos[nota_index]))
             {
                 if (notas[nota_index] & AMARELA)
                 {
@@ -282,9 +297,14 @@ int main()
                         Insere_Barra(SPR_addSprite(&barraR, VEMELHO_B_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_B_X, 0, duracoes[nota_index]);
                     }
                 }
-                if (nota_index < tamanho_musica)
+                if (nota_index < tamanho_musica-1)
                 {
                     nota_index++;
+                }
+                else
+                {
+                    notas_faltando = 0;
+                    break;
                 }
             }
 
@@ -308,6 +328,8 @@ int main()
                 consecutivas = 0;
                 multiplicador = 1;
             }
+
+            esconde_fogo();
 
             parcial = 0;
             parcial = atualizaPosicao_Barra(velocidade, parcial);
@@ -449,6 +471,11 @@ int main()
                     SPR_releaseSprite(btr2);
                     SPR_releaseSprite(btg2);
                     SPR_releaseSprite(bty2);
+
+                    SPR_releaseSprite(fogoR);
+                    SPR_releaseSprite(fogoG);
+                    SPR_releaseSprite(fogoY);
+
                     XGM_stopPlay(musica_xgm);
                 }
                 //reiniciar
@@ -459,6 +486,11 @@ int main()
                     SPR_releaseSprite(btr2);
                     SPR_releaseSprite(btg2);
                     SPR_releaseSprite(bty2);
+
+                    SPR_releaseSprite(fogoR);
+                    SPR_releaseSprite(fogoG);
+                    SPR_releaseSprite(fogoY);
+                    
                     XGM_stopPlay(musica_xgm);
                 }
             }
