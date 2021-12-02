@@ -25,6 +25,7 @@ typedef enum // Cria uma ENUM para indetificar uma nota
 {
 	SONIC,
 	BACK_IN_BLACK,
+	STREETS_OF_RAGE,
 } Musica; // Define uma nota
 
 
@@ -47,6 +48,7 @@ u16 duracao_sonic[434];
 const u16 tamanho_sonic;
 const u8 velocidade_sonic;
 const u16 delay_sonic;
+const u8 loops_sonic;
 
 
 Nota notas_bib[223];
@@ -55,6 +57,15 @@ u32 tempos_bib[223];
 const u16 tamanho_bib;
 const u8 velocidade_bib;
 const u16 delay_bib;
+const u8 loops_bib;
+
+Nota notas_sor[165];
+u16 duracao_sor[165];
+u32 tempos_sor[165];
+const u16 tamanho_sor;
+const u8 velocidade_sor;
+const u16 delay_sor;
+const u8 loops_sor;
 
 
 #endif

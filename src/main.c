@@ -18,6 +18,8 @@
 
 Sprite *btr2, *btg2, *bty2;
 Sprite *cursor;
+Sprite *vu;
+Sprite *mult_s;
 
 char text[64];
 
@@ -74,6 +76,7 @@ int main()
     u8 velocidade;
     u8 *musica_xgm;
     u16 delay;
+    u8 loops;
 
     s16 cursorY;
     s16 cursorX;
@@ -123,7 +126,7 @@ int main()
             if (J1BAIXO)
             {
                 J1BAIXO = 0;
-                if (cursorY < 14)
+                if (cursorY < 15)
                 {
                     cursorY++;
                 }
@@ -142,7 +145,7 @@ int main()
                 }
                 else
                 {
-                    cursorY = 14;
+                    cursorY = 15;
                 }
                 SPR_setPosition(cursor, cursorX, cursorY * 8);
             }
@@ -156,6 +159,7 @@ int main()
                 SPR_releaseSprite(cursor);
                 VDP_clearTextLine(13);
                 VDP_clearTextLine(14);
+                VDP_clearTextLine(15);
                 //selec sonic
                 if (cursorY == 13)
                 {
@@ -168,6 +172,11 @@ int main()
                     musica = BACK_IN_BLACK;
                     state = MUSICA;
                 }
+                else if (cursorY == 15)
+                {
+                    musica = STREETS_OF_RAGE;
+                    state = MUSICA;
+                }
             }
             break;
         case MUSICA:
@@ -178,12 +187,12 @@ int main()
                 //bg_A
                 // VDP_drawImageEx(BG_A, &bga, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
 
-                VDP_setPlaneSize(64, 64, TRUE);
+                VDP_setPlaneSize(128, 64, TRUE);
                 VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 
-                VDP_drawImageEx(BG_A, &bga_s, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 5, 0, FALSE, TRUE);
+                VDP_drawImageEx(BG_A, &bga_sonic, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 5, 0, FALSE, TRUE);
 
-                VDP_setPalette(PAL1, bga_s.palette->data);
+                VDP_setPalette(PAL1, bga_sonic.palette->data);
                 VDP_setPalette(PAL2, btR2.palette->data);
                 VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xff0000));
 
@@ -198,6 +207,9 @@ int main()
                     fogoR = SPR_addSprite(&Fogo, VEMELHO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
                     fogoG = SPR_addSprite(&Fogo, VERDE_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
                     fogoY = SPR_addSprite(&Fogo, AMARELO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+
+                    vu = SPR_addSprite(&Vu, 270 , ALTURA_MIRA - 80, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    mult_s = SPR_addSprite(&Mult, 270 , ALTURA_MIRA - 120, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
 
                     SPR_setVisibility(fogoR, HIDDEN);
                     SPR_setVisibility(fogoG, HIDDEN);
@@ -231,6 +243,7 @@ int main()
                         duracoes = duracao_sonic;
                         musica_xgm = sonic_music;
                         delay = delay_sonic;
+                        loops = loops_sonic;
                         break;
 
                     case BACK_IN_BLACK:
@@ -241,6 +254,18 @@ int main()
                         duracoes = duracao_bib;
                         musica_xgm = back_music;
                         delay = delay_bib;
+                        loops = loops_bib;
+                        break;
+
+                    case STREETS_OF_RAGE:
+                        notas = notas_sor;
+                        tempos = tempos_sor;
+                        tamanho_musica = tamanho_sor;
+                        velocidade = velocidade_sor;
+                        duracoes = duracao_sor;
+                        musica_xgm = sor_music;
+                        delay = delay_sor;
+                        loops = loops_sor;
                         break;
 
                     default:
@@ -260,14 +285,7 @@ int main()
             if (getTick() - init_time >= delay && !start_music)
             {
                 XGM_startPlay(musica_xgm);
-                if (musica == SONIC)
-                {
-                    XGM_setLoopNumber(4);
-                }
-                else
-                {
-                    XGM_setLoopNumber(0);
-                }
+                XGM_setLoopNumber(loops);
 
                 start_music = 1;
             }
@@ -316,15 +334,25 @@ int main()
                 if (multiplicador < 4)
                 {
                     consecutivas++;
+
+                    if((consecutivas % 2) == 0)
+                    {
+                        SPR_nextFrame(vu);
+                    }
+
                     if (consecutivas == 10)
                     {
                         multiplicador++;
+                        SPR_nextFrame(mult_s);
                         consecutivas = 0;
                     }
+
                 }
             }
             else if (parcial < 0)
             {
+                SPR_setFrame(vu, 0);
+                SPR_setFrame(mult_s, 0);
                 consecutivas = 0;
                 multiplicador = 1;
             }
@@ -341,6 +369,8 @@ int main()
                 J1A = 0;
                 consecutivas = 0;
                 multiplicador = 1;
+                SPR_setFrame(vu, 0);
+                SPR_setFrame(mult_s, 0);
                 XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
             }
             if (J1B && (J1BCount + 50) > (u16)getTick())
@@ -349,6 +379,8 @@ int main()
                 J1B = 0;
                 consecutivas = 0;
                 multiplicador = 1;
+                SPR_setFrame(vu, 0);
+                SPR_setFrame(mult_s, 0);
                 XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
             }
             if (J1C && (J1CCount + 50) > (u16)getTick())
@@ -356,7 +388,8 @@ int main()
                 placar--;
                 J1C = 0;
                 consecutivas = 0;
-
+                SPR_setFrame(vu, 0);
+                SPR_setFrame(mult_s, 0);
                 XGM_startPlayPCM(SFX_ERROR, 1, SOUND_PCM_CH2);
             }
             if (J1S)
@@ -476,6 +509,10 @@ int main()
                     SPR_releaseSprite(fogoG);
                     SPR_releaseSprite(fogoY);
 
+                    SPR_releaseSprite(vu);
+                    SPR_releaseSprite(mult_s);
+
+
                     XGM_stopPlay(musica_xgm);
                 }
                 //reiniciar
@@ -490,6 +527,9 @@ int main()
                     SPR_releaseSprite(fogoR);
                     SPR_releaseSprite(fogoG);
                     SPR_releaseSprite(fogoY);
+
+                    SPR_releaseSprite(vu);
+                    SPR_releaseSprite(mult_s);
                     
                     XGM_stopPlay(musica_xgm);
                 }

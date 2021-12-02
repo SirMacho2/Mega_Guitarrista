@@ -3,7 +3,7 @@
 
 #include <genesis.h>
 
-#define NUM_MUSICAS 2
+#define NUM_MUSICAS 3
 #define NUM_OPCOES_PAUSA 3
 
 // define a estrutura das opções
