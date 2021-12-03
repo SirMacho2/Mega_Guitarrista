@@ -20,6 +20,6 @@ const Opcao opcoes_pause[NUM_OPCOES_PAUSA];
 void mostra_menu_inicial();
 void mostra_menu_pausa();
 
-void mostra_menu(Opcao *opcoes, u8 tamanho);
+void mostra_menu(const Opcao *opcoes, u8 tamanho);
 
 #endif

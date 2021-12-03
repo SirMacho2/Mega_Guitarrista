@@ -32,7 +32,7 @@ void mostra_menu_pausa()
     }
 }
 
-void mostra_menu(Opcao *opcoes, u8 tamanho)
+void mostra_menu(const Opcao *opcoes, u8 tamanho)
 {
     u8 i;
     for(i = 0; i < tamanho; i++)

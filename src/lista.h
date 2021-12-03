@@ -32,6 +32,7 @@ typedef struct TempB
 
 LNotas *inicio_Nota;
 LBarras *inicio_Barra;
+
 Sprite *fogoR, *fogoG, *fogoY;
 
 void CriaLista_Nota();

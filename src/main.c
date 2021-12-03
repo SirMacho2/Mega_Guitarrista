@@ -433,16 +433,14 @@ int main()
             VDP_setVerticalScroll(BG_A, yOffsetBg);
 
             // draw screen
-            sprintf(text, "placar = %3d, consecutiva = %d, X%d", placar, consecutivas, multiplicador);
-            // VDP_clearTextLine(0);
-            VDP_drawText(text, 0, 0);
+            sprintf(text, "%05d", placar);
+            VDP_drawText(text, 34, 6);
 
             break;
         case PAUSA:
             if (state_anterior != state)
             {
                 state_anterior = state;
-                VDP_clearTextLine(0);
                 mostra_menu_pausa();
                 VDP_setPalette(PAL3, Cursor.palette->data);
                 cursorY = 14;
@@ -511,9 +509,12 @@ int main()
 
                     SPR_releaseSprite(vu);
                     SPR_releaseSprite(mult_s);
-
+                    VDP_clearTextLine(6);
 
                     XGM_stopPlay(musica_xgm);
+
+                    SPR_reset();
+                    MEM_pack();
                 }
                 //reiniciar
                 else
@@ -532,11 +533,13 @@ int main()
                     SPR_releaseSprite(mult_s);
                     
                     XGM_stopPlay(musica_xgm);
+
+                    SPR_reset();
+                    MEM_pack();
                 }
             }
             break;
         }
-
         SPR_update();
         SYS_doVBlankProcess();
     }
