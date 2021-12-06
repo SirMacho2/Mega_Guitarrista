@@ -4,5 +4,6 @@
 extern const Image bga;
 extern const Image bga_s;
 extern const Image bga_sonic;
+extern const Image k7;
 
 #endif // _RES_BG_H_

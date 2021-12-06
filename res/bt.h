@@ -1,8 +1,6 @@
 #ifndef _RES_BT_H_
 #define _RES_BT_H_
 
-extern const Palette palette_font;
-extern const TileSet font;
 extern const SpriteDefinition btG2;
 extern const SpriteDefinition btY2;
 extern const SpriteDefinition btR2;
