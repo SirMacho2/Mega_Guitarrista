@@ -28,7 +28,8 @@ enum States
     MENU_INICIAL,
     MUSICA,
     MUSICAS,
-    PAUSA
+    PAUSA,
+    FIM_MUSICA,
 };
 
 int main()
@@ -59,6 +60,7 @@ int main()
 
     u32 init_time = getTick();
     u32 pause_time = 0;
+    u32 final_time = 0xFFFFFFFF;
     bool start_music = 0;
     bool notas_faltando = 1;
     u16 nota_index = 0;
@@ -322,10 +324,10 @@ int main()
                 else
                 {
                     notas_faltando = 0;
+                    final_time = getTick();
                     break;
                 }
             }
-
             s8 parcial = 0;
             parcial = atualizaPosicao_Nota(velocidade, parcial);
             if (parcial > 0)
@@ -436,6 +438,29 @@ int main()
             sprintf(text, "%05d", placar);
             VDP_drawText(text, 34, 6);
 
+            if(notas_faltando  == 0 && getTick() - final_time > 600)
+            {
+                state = FIM_MUSICA;
+
+                limpa_listas();
+                SPR_releaseSprite(btr2);
+                SPR_releaseSprite(btg2);
+                SPR_releaseSprite(bty2);
+
+                SPR_releaseSprite(fogoR);
+                SPR_releaseSprite(fogoG);
+                SPR_releaseSprite(fogoY);
+
+                SPR_releaseSprite(vu);
+                SPR_releaseSprite(mult_s);
+                VDP_clearTextLine(6);
+
+                XGM_stopPlay(musica_xgm);
+
+                SPR_reset();
+                MEM_pack();
+            }
+
             break;
         case PAUSA:
             if (state_anterior != state)
@@ -537,6 +562,68 @@ int main()
                     SPR_reset();
                     MEM_pack();
                 }
+            }
+            break;
+        case FIM_MUSICA:
+            if (state_anterior != state)
+            {
+                state_anterior = state;
+                mostra_menu(opcoes_fim, NUM_OPCOES_FIM);
+                VDP_setPalette(PAL3, Cursor.palette->data);
+                cursorY = 14;
+                cursorX = 17 * 8;
+                cursor = SPR_addSprite(&Cursor, cursorX, cursorY * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                XGM_stopPlay(musica_xgm);
+
+                sprintf(text, "Seu placar foi: %05d", placar);
+                VDP_drawText(text, 10, 11);
+            }
+            if (J1BAIXO)
+            {
+                J1BAIXO = 0;
+                if (cursorY < 15)
+                {
+                    cursorY++;
+                }
+                else
+                {
+                    cursorY = 14;
+                }
+                SPR_setPosition(cursor, cursorX, cursorY * 8);
+            }
+            if (J1CIMA)
+            {
+                J1CIMA = 0;
+                if (cursorY > 14)
+                {
+                    cursorY--;
+                }
+                else
+                {
+                    cursorY = 15;
+                }
+                SPR_setPosition(cursor, cursorX, cursorY * 8);
+            }
+            if (J1S | J1A | J1B | J1C)
+            {
+                J1S = 0;
+                J1A = 0;
+                J1B = 0;
+                J1C = 0;
+
+                SPR_releaseSprite(cursor);
+                VDP_clearTextLine(11);
+                VDP_clearTextLine(14);
+                VDP_clearTextLine(15);
+
+                 if (cursorY > 14)
+                 {
+                    state = MUSICA;
+                 }
+                 else
+                 {
+                    state = MENU_INICIAL;
+                 }
             }
             break;
         }

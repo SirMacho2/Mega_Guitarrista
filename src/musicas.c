@@ -24,6 +24,6 @@ u32 tempos_sor[165] = {0, 0, 0, 80, 161, 241, 321, 402, 482, 643, 683, 804, 884,
 const u16 tamanho_sor = 165;
 const u8 velocidade_sor = 2;
 const u16 delay_sor = 123;
-const u8 loops_sor = 1;
+const u8 loops_sor = 2;
 
 

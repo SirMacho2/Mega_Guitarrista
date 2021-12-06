@@ -18,6 +18,11 @@ const Opcao opcoes_musicas[NUM_MUSICAS] = {
 
 const Opcao opcoes_menu_inicial =  {CENTRO_X -8, CENTRO_Y, "Pressione Start"};
 
+const Opcao opcoes_fim[NUM_OPCOES_FIM] = {
+    {CENTRO_X-2, CENTRO_Y, "SAIR"},
+    {CENTRO_X-2, CENTRO_Y+1, "REINICIAR"},
+};
+
 void mostra_menu_inicial()
 {
     VDP_drawText(opcoes_menu_inicial.texto, opcoes_menu_inicial.x,opcoes_menu_inicial.y);
