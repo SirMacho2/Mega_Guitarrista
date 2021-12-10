@@ -11,7 +11,7 @@ SPRITE barraG "bt\barra_g.png" 1 1 NONE 1
 SPRITE barraY "bt\barra_y.png" 1 1 NONE 1
 
 SPRITE Cursor "bt\cursor.png" 1 1 NONE 1
-SPRITE Fogo "bt\fogo.png" 5 3 NONE 1
+SPRITE Fogo "bt\fogo.png" 4 5 NONE 10
 
-SPRITE Vu   "bt\vu.png" 5 13 NONE 0
+SPRITE Vu   "bt\vu.png" 6 11 NONE 0
 SPRITE Mult "bt\multiplicador.png" 5 5 NONE 0

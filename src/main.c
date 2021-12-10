@@ -15,6 +15,7 @@
 #include "menu.h"
 
 #define SFX_ERROR 64
+#define SFX_CLICK 65
 
 Sprite *btr2, *btg2, *bty2;
 Sprite *cursor;
@@ -41,6 +42,7 @@ int main()
     SYS_enableInts();
 
     XGM_setPCM(SFX_ERROR, error_sfx, sizeof(error_sfx));
+    XGM_setPCM(SFX_CLICK, click_sfx, sizeof(click_sfx));
 
     //inicializacao de sprites
     SPR_init();
@@ -86,7 +88,6 @@ int main()
     s16 yOffsetBg = 0;
 
     VDP_setTextPlane(BG_B);
-
     while (1)
     {
         switch (state)
@@ -94,25 +95,32 @@ int main()
         case MENU_INICIAL:
             if (state_anterior != state)
             {
+                VDP_clearPlane(BG_A, TRUE);
+                VDP_setVerticalScroll(BG_A, 0);
                 VDP_setPaletteColors(0, (u16 *)palette_black, 64); // set all palettes to black
-                VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xff0000));
+                
                 VDP_setPalette(PAL3, Cursor.palette->data);
 
                 mostra_menu_inicial();
                 cursor = SPR_addSprite(&Cursor, 10 * 8, 14 * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
                 state_anterior = state;
+                VDP_drawImageEx(BG_A, &concert, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
+                VDP_setPalette(PAL0, concert.palette->data);
+                VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xffFFFF));
             }
             if (J1S)
             {
+                XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
                 J1S = 0;
                 state = MUSICAS;
                 SPR_releaseSprite(cursor);
                 VDP_clearTextLine(14);
-            }
+            }          
             break;
         case MUSICAS:
             if (state_anterior != state)
             {
+                
                 VDP_clearPlane(BG_A, TRUE);
                 VDP_setVerticalScroll(BG_A, 0);
                 VDP_setPaletteColors(0, (u16 *)palette_black, 64); // set all palettes to black
@@ -127,7 +135,6 @@ int main()
                 J1BAIXO = 0;
                 J1CIMA = 0;
 
-                VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
                 VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 11, -7, FALSE, TRUE);
                 VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 11, 8, FALSE, TRUE);
                 VDP_setPalette(PAL1, k7.palette->data);
@@ -147,6 +154,7 @@ int main()
                 }
                 VDP_clearTextArea(opcoes_musicas[cursorY -13].x, opcoes_musicas[cursorY -13].y, 32, 1);
                 VDP_drawText(opcoes_musicas[cursorY -13].texto, opcoes_musicas[cursorY -13].x,opcoes_musicas[cursorY -13].y);
+                XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
                 // SPR_setPosition(cursor, cursorX, cursorY * 8);
             }
             if (J1CIMA)
@@ -163,6 +171,7 @@ int main()
                 // SPR_setPosition(cursor, cursorX, cursorY * 8);
                 VDP_clearTextArea(opcoes_musicas[cursorY -13].x, opcoes_musicas[cursorY -13].y, 32, 1);
                 VDP_drawText(opcoes_musicas[cursorY -13].texto, opcoes_musicas[cursorY -13].x,opcoes_musicas[cursorY -13].y);
+                XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
             }
 
             if (J1S | J1A | J1B | J1C)
@@ -208,7 +217,7 @@ int main()
 
                 VDP_setPalette(PAL1, bga_s.palette->data);
                 VDP_setPalette(PAL2, btR2.palette->data);
-                VDP_setPalette(PAL3, Vu.palette->data);
+                VDP_setPalette(PAL3, Fogo.palette->data);
                 VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xff0000));
 
                 if (resume == 0)
@@ -219,12 +228,12 @@ int main()
                     bty2 = SPR_addSprite(&btY2, AMARELO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
 
 
-                    fogoR = SPR_addSprite(&Fogo, VEMELHO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-                    fogoG = SPR_addSprite(&Fogo, VERDE_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-                    fogoY = SPR_addSprite(&Fogo, AMARELO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    fogoR = SPR_addSprite(&Fogo, VEMELHO_X+5, ALTURA_MIRA-28, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                    fogoG = SPR_addSprite(&Fogo, VERDE_X+5, ALTURA_MIRA-28, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                    fogoY = SPR_addSprite(&Fogo, AMARELO_X+5, ALTURA_MIRA-28, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
 
-                    vu = SPR_addSprite(&Vu, 270 , ALTURA_MIRA - 80, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
-                    mult_s = SPR_addSprite(&Mult, 270 , ALTURA_MIRA - 120, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                    vu = SPR_addSprite(&Vu, 270 , ALTURA_MIRA - 80, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    mult_s = SPR_addSprite(&Mult, 270 , ALTURA_MIRA - 120, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
 
                     SPR_setVisibility(fogoR, HIDDEN);
                     SPR_setVisibility(fogoG, HIDDEN);
@@ -349,16 +358,13 @@ int main()
                 if (multiplicador < 4)
                 {
                     consecutivas++;
-
-                    if((consecutivas % 2) == 0)
-                    {
-                        SPR_nextFrame(vu);
-                    }
+                    SPR_nextFrame(vu);
 
                     if (consecutivas == 10)
                     {
                         multiplicador++;
                         SPR_nextFrame(mult_s);
+                        SPR_nextFrame(vu);
                         consecutivas = 0;
                     }
 
@@ -498,6 +504,7 @@ int main()
                     cursorY = 14;
                 }
                 SPR_setPosition(cursor, cursorX, cursorY * 8);
+                XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
             }
             if (J1CIMA)
             {
@@ -511,6 +518,7 @@ int main()
                     cursorY = 16;
                 }
                 SPR_setPosition(cursor, cursorX, cursorY * 8);
+                XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
             }
             if (J1S | J1A | J1B | J1C)
             {
@@ -580,6 +588,9 @@ int main()
         case FIM_MUSICA:
             if (state_anterior != state)
             {
+                VDP_clearPlane(BG_A, TRUE);
+                VDP_setVerticalScroll(BG_A, 0);
+                VDP_setPaletteColors(0, (u16 *)palette_black, 64); // set all palettes to black
                 state_anterior = state;
                 mostra_menu(opcoes_fim, NUM_OPCOES_FIM);
                 VDP_setPalette(PAL3, Cursor.palette->data);
@@ -588,8 +599,12 @@ int main()
                 cursor = SPR_addSprite(&Cursor, cursorX, cursorY * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
                 XGM_stopPlay(musica_xgm);
 
+                VDP_drawImageEx(BG_A, &concert, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
+                VDP_setPalette(PAL0, concert.palette->data);
+
                 sprintf(text, "Seu placar foi: %05d", placar);
                 VDP_drawText(text, 10, 11);
+                VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xffFFFF));
             }
             if (J1BAIXO)
             {
@@ -603,6 +618,7 @@ int main()
                     cursorY = 14;
                 }
                 SPR_setPosition(cursor, cursorX, cursorY * 8);
+                XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
             }
             if (J1CIMA)
             {
@@ -616,6 +632,7 @@ int main()
                     cursorY = 15;
                 }
                 SPR_setPosition(cursor, cursorX, cursorY * 8);
+                XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
             }
             if (J1S | J1A | J1B | J1C)
             {

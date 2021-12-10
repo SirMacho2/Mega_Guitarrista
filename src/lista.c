@@ -180,6 +180,7 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                         placar++;
                         J1A = 0;
                         SPR_setVisibility(ptr->sprite, HIDDEN);
+                        SPR_setFrame(fogoY,0);
                         SPR_setVisibility(fogoY, VISIBLE);
                         tempoFogoY = getTick();
                     }
@@ -188,6 +189,7 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                         placar++;
                         J1B = 0;
                         SPR_setVisibility(ptr->sprite, HIDDEN);
+                        SPR_setFrame(fogoG,0);
                         SPR_setVisibility(fogoG, VISIBLE);
                         tempoFogoG = getTick();
                     }
@@ -196,6 +198,7 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                         placar++;
                         J1C = 0;
                         SPR_setVisibility(ptr->sprite, HIDDEN);
+                        SPR_setFrame(fogoR,0);
                         SPR_setVisibility(fogoR, VISIBLE);
                         tempoFogoR = getTick();
                     }
@@ -270,6 +273,7 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                         {
                             placar++;
                             SPR_setVisibility(ptr->sprite, HIDDEN);
+                            SPR_setFrame(fogoY,0);
                             SPR_setVisibility(fogoY, VISIBLE);
                             tempoFogoY = getTick();
                         }
@@ -281,6 +285,7 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                         {
                             placar++;
                             SPR_setVisibility(ptr->sprite, HIDDEN);
+                            SPR_setFrame(fogoG,0);
                             SPR_setVisibility(fogoG, VISIBLE);
                             tempoFogoG = getTick();
                         }
@@ -291,7 +296,8 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                         {
                             placar++;
                             SPR_setVisibility(ptr->sprite, HIDDEN);
-                            SPR_setVisibility(fogoR, VISIBLE);
+                            SPR_setFrame(fogoR,0);
+                            SPR_setVisibility(fogoR, VISIBLE);    
                             tempoFogoR = getTick();
                         }
                     }
