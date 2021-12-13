@@ -11,9 +11,10 @@ const Opcao opcoes_pause[NUM_OPCOES_PAUSA] = {
 };
 
 const Opcao opcoes_musicas[NUM_MUSICAS] = {
-    {CENTRO_X-7, CENTRO_Y-3, "Green Hill Zone"},
-    {CENTRO_X-7, CENTRO_Y-3, "Back in Black"},
-    {CENTRO_X-7, CENTRO_Y-3, "Streets of Rage"},
+    {CENTRO_X-7, CENTRO_Y-4, "Green Hill Zone"},
+    {CENTRO_X-7, CENTRO_Y-4, "Back in Black"},
+    {CENTRO_X-7, CENTRO_Y-4, "Streets of Rage"},
+    {CENTRO_X-7, CENTRO_Y-4, "Guile theme"},
 };
 
 const Opcao opcoes_menu_inicial =  {CENTRO_X -8, CENTRO_Y, "Pressione Start"};

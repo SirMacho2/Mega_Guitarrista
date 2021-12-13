@@ -4,7 +4,7 @@
 #include "musicas.h"
 #include "bt.h"
 
-#define TEMPO_FOGO 100
+#define TEMPO_FOGO 110
 
 
 static u32 tempoFogoR = 0, tempoFogoG = 0, tempoFogoY = 0;

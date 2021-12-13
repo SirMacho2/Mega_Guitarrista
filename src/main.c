@@ -87,6 +87,11 @@ int main()
 
     s16 yOffsetBg = 0;
 
+    s8 menu_movendo = 0;
+
+    const u16 k7_colors[] = {0x02e, 0xa00, 0x06a, 0x0a0};
+    u8 color_index;
+    
     VDP_setTextPlane(BG_B);
     while (1)
     {
@@ -106,7 +111,7 @@ int main()
                 state_anterior = state;
                 VDP_drawImageEx(BG_A, &concert, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
                 VDP_setPalette(PAL0, concert.palette->data);
-                VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xffFFFF));
+                PAL_setColor(15, RGB24_TO_VDPCOLOR(0xffFFFF));
             }
             if (J1S)
             {
@@ -120,58 +125,88 @@ int main()
         case MUSICAS:
             if (state_anterior != state)
             {
-                
+                yOffsetBg =0;
                 VDP_clearPlane(BG_A, TRUE);
-                VDP_setVerticalScroll(BG_A, 0);
+                VDP_setVerticalScroll(BG_A, yOffsetBg);
                 VDP_setPaletteColors(0, (u16 *)palette_black, 64); // set all palettes to black
                 VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xff0000));
                 VDP_setPalette(PAL3, Cursor.palette->data);
-
-                // mostra_menu(opcoes_musicas, NUM_MUSICAS);
-                cursorX = 11 * 8;
-                cursorY = 13;
-                // cursor = SPR_addSprite(&Cursor, cursorX, cursorY * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                
+                cursorY = 0;
                 state_anterior = state;
                 J1BAIXO = 0;
                 J1CIMA = 0;
 
-                VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 11, -7, FALSE, TRUE);
-                VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 11, 8, FALSE, TRUE);
+                VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 11, -9, FALSE, TRUE);
+                VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL2, FALSE, FALSE, FALSE), 11, 7, FALSE, TRUE);
+
                 VDP_setPalette(PAL1, k7.palette->data);
-                VDP_drawText(opcoes_musicas[cursorY -13].texto, opcoes_musicas[cursorY -13].x,opcoes_musicas[cursorY -13].y);
-           
+                VDP_setPalette(PAL2, k7.palette->data);
+                VDP_drawText(opcoes_musicas[cursorY].texto, opcoes_musicas[cursorY].x,opcoes_musicas[cursorY ].y);
+                VDP_drawText(opcoes_musicas[cursorY + 1].texto, opcoes_musicas[cursorY + 1].x, 26);
+                menu_movendo = 0;
+                color_index = 0;
             }
             if (J1BAIXO)
             {
+                menu_movendo = 1;
                 J1BAIXO = 0;
-                if (cursorY < 15)
+                if (cursorY < NUM_MUSICAS -1)
                 {
                     cursorY++;
+                    color_index++;
                 }
                 else
                 {
-                    cursorY = 13;
+                    cursorY = 0;
+                    color_index =0;
                 }
-                VDP_clearTextArea(opcoes_musicas[cursorY -13].x, opcoes_musicas[cursorY -13].y, 32, 1);
-                VDP_drawText(opcoes_musicas[cursorY -13].texto, opcoes_musicas[cursorY -13].x,opcoes_musicas[cursorY -13].y);
+           
+                VDP_clearTextArea(opcoes_musicas[cursorY].x, opcoes_musicas[cursorY].y, 32, 1);
+                VDP_clearTextArea(opcoes_musicas[cursorY].x, 26, 32, 1);
                 XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
-                // SPR_setPosition(cursor, cursorX, cursorY * 8);
+                PAL_setColor(19, k7_colors[color_index]);
+                      
             }
             if (J1CIMA)
             {
+                menu_movendo = -1;
                 J1CIMA = 0;
-                if (cursorY > 13)
+                if (cursorY > 0)
                 {
                     cursorY--;
+                    color_index--;
                 }
                 else
                 {
-                    cursorY = 15;
+                    cursorY = NUM_MUSICAS -1;
+                    color_index = NUM_MUSICAS -1;
                 }
-                // SPR_setPosition(cursor, cursorX, cursorY * 8);
-                VDP_clearTextArea(opcoes_musicas[cursorY -13].x, opcoes_musicas[cursorY -13].y, 32, 1);
-                VDP_drawText(opcoes_musicas[cursorY -13].texto, opcoes_musicas[cursorY -13].x,opcoes_musicas[cursorY -13].y);
+
+                VDP_clearTextArea(opcoes_musicas[cursorY].x, opcoes_musicas[cursorY].y, 32, 1);
+                VDP_clearTextArea(opcoes_musicas[cursorY].x, 26, 32, 1);
                 XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
+                PAL_setColor(19, k7_colors[color_index]);  
+            }
+            if(menu_movendo)
+            {
+                yOffsetBg = yOffsetBg + 8*menu_movendo;
+                VDP_setVerticalScroll(BG_A, yOffsetBg);
+                if (yOffsetBg == 128 || yOffsetBg == -128)
+                {
+                    yOffsetBg = 0;
+                    menu_movendo =0;
+                    VDP_drawText(opcoes_musicas[cursorY].texto, opcoes_musicas[cursorY].x,opcoes_musicas[cursorY].y);
+                    if (cursorY == NUM_MUSICAS - 1)
+                    {
+                        VDP_drawText(opcoes_musicas[0].texto, opcoes_musicas[0].x, 26);
+                    }
+                    else
+                    {
+                        VDP_drawText(opcoes_musicas[cursorY +1].texto, opcoes_musicas[cursorY +1].x,26);
+                    }
+                    PAL_setColor(35, k7_colors[color_index]);
+                }
             }
 
             if (J1S | J1A | J1B | J1C)
@@ -182,24 +217,27 @@ int main()
                 J1C = 0;
 
                 // SPR_releaseSprite(cursor);
-                VDP_clearTextLine(opcoes_musicas[cursorY -13].y);
+                VDP_clearTextLine(opcoes_musicas[cursorY].y);
+                VDP_clearTextArea(opcoes_musicas[cursorY].x, 26, 32, 1);
                 //selec sonic
-                if (cursorY == 13)
+                if (cursorY == 0)
                 {
                     musica = SONIC;
-                    state = MUSICA;
                 }
                 //select back in black
-                else if (cursorY == 14)
+                else if (cursorY == 1)
                 {
                     musica = BACK_IN_BLACK;
-                    state = MUSICA;
                 }
-                else if (cursorY == 15)
+                else if (cursorY == 2)
                 {
                     musica = STREETS_OF_RAGE;
-                    state = MUSICA;
                 }
+                else if (cursorY == 3)
+                {
+                    musica = GUILE_THEME;
+                }
+                state = MUSICA;
             }
             break;
         case MUSICA:
@@ -228,9 +266,9 @@ int main()
                     bty2 = SPR_addSprite(&btY2, AMARELO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
 
 
-                    fogoR = SPR_addSprite(&Fogo, VEMELHO_X+5, ALTURA_MIRA-28, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
-                    fogoG = SPR_addSprite(&Fogo, VERDE_X+5, ALTURA_MIRA-28, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
-                    fogoY = SPR_addSprite(&Fogo, AMARELO_X+5, ALTURA_MIRA-28, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                    fogoR = SPR_addSprite(&Fogo, VEMELHO_X+6, ALTURA_MIRA-26, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                    fogoG = SPR_addSprite(&Fogo, VERDE_X+6, ALTURA_MIRA-26, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                    fogoY = SPR_addSprite(&Fogo, AMARELO_X+6, ALTURA_MIRA-26, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
 
                     vu = SPR_addSprite(&Vu, 270 , ALTURA_MIRA - 80, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
                     mult_s = SPR_addSprite(&Mult, 270 , ALTURA_MIRA - 120, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
@@ -291,6 +329,16 @@ int main()
                         delay = delay_sor;
                         loops = loops_sor;
                         break;
+                    
+                    case GUILE_THEME:
+                        notas = notas_guile;
+                        tempos = tempos_guile;
+                        tamanho_musica = tamanho_guile;
+                        velocidade = velocidade_guile;
+                        duracoes = duracao_guile;
+                        musica_xgm = guile_music;
+                        delay = delay_guile;
+                        loops = loops_guile;
 
                     default:
                         break;
@@ -457,7 +505,7 @@ int main()
             sprintf(text, "%05d", placar);
             VDP_drawText(text, 34, 6);
 
-            if(notas_faltando  == 0 && getTick() - final_time > 600)
+            if(notas_faltando  == 0 && getTick() - final_time > 1000)
             {
                 state = FIM_MUSICA;
 
