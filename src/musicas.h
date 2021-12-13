@@ -43,34 +43,34 @@ typedef enum // Cria uma ENUM para indetificar uma nota
 
 Musica cria_musica(	Nota *notas, s16 *tempos, u16 tamanho,	u8 velocidade);
 
-u32 tempos_sonic[434];
-Nota notas_sonic[434];
-u16 duracao_sonic[434];
+const u32 tempos_sonic[434];
+const Nota notas_sonic[434];
+const u16 duracao_sonic[434];
 const u16 tamanho_sonic;
 const u8 velocidade_sonic;
 const u16 delay_sonic;
 const u8 loops_sonic;
 
 
-Nota notas_bib[223];
-u16 duracao_bib[223];
-u32 tempos_bib[223];
+const Nota notas_bib[223];
+const u16 duracao_bib[223];
+const u32 tempos_bib[223];
 const u16 tamanho_bib;
 const u8 velocidade_bib;
 const u16 delay_bib;
 const u8 loops_bib;
 
-Nota notas_sor[165];
-u16 duracao_sor[165];
-u32 tempos_sor[165];
+const Nota notas_sor[165];
+const u16 duracao_sor[165];
+const u32 tempos_sor[165];
 const u16 tamanho_sor;
 const u8 velocidade_sor;
 const u16 delay_sor;
 const u8 loops_sor;
 
-Nota notas_guile[259];
-u16 duracao_guile[259];
-u32 tempos_guile[259];
+const Nota notas_guile[259];
+const u16 duracao_guile[259];
+const u32 tempos_guile[259];
 const u16 tamanho_guile;
 const u8 velocidade_guile;
 const u16 delay_guile;

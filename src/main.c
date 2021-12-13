@@ -73,12 +73,12 @@ int main()
 
     Musica musica = BACK_IN_BLACK;
 
-    Nota *notas;
-    u32 *tempos;
-    u16 *duracoes;
+    const Nota *notas;
+    const u32 *tempos;
+    const u16 *duracoes;
     u16 tamanho_musica;
     u8 velocidade;
-    u8 *musica_xgm;
+    const u8 *musica_xgm;
     u16 delay;
     u8 loops;
 
