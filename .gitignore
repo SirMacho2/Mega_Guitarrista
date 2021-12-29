@@ -3,3 +3,4 @@ src/boot/
 /imgs/*
 /res/bt.h
 /res/sound.h
+.vscode/tasks.json
