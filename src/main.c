@@ -17,6 +17,8 @@
 #define SFX_ERROR 64
 #define SFX_CLICK 65
 
+#define PLACAR_Y 9
+
 Sprite *btr2, *btg2, *bty2;
 Sprite *cursor;
 Sprite *vu;
@@ -92,6 +94,8 @@ int main()
     const u16 k7_colors[] = {0x02e, 0xa00, 0x06a, 0x0a0};
     u8 color_index;
     
+    s16 offset_mask [28] = {19, 17, 15, 14, 12, 10, 9, 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 6, 6, 7, 8, 9, 10, 12, 14, 15, 17, 19};
+
     VDP_setTextPlane(BG_B);
     while (1)
     {
@@ -126,6 +130,7 @@ int main()
             if (state_anterior != state)
             {
                 yOffsetBg =0;
+                VDP_setScrollingMode(HSCROLL_TILE , VSCROLL_PLANE);
                 VDP_clearPlane(BG_A, TRUE);
                 VDP_setVerticalScroll(BG_A, yOffsetBg);
                 VDP_setPaletteColors(0, (u16 *)palette_black, 64); // set all palettes to black
@@ -137,8 +142,8 @@ int main()
                 J1BAIXO = 0;
                 J1CIMA = 0;
 
-                VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 11, -9, FALSE, TRUE);
-                VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL2, FALSE, FALSE, FALSE), 11, 7, FALSE, TRUE);
+                VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 15, -9, FALSE, TRUE);
+                VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL2, FALSE, FALSE, FALSE), 15, 7, FALSE, TRUE);
 
                 VDP_setPalette(PAL1, k7.palette->data);
                 VDP_setPalette(PAL2, k7.palette->data);
@@ -146,6 +151,7 @@ int main()
                 VDP_drawText(opcoes_musicas[cursorY + 1].texto, opcoes_musicas[cursorY + 1].x, 26);
                 menu_movendo = 0;
                 color_index = 0;
+                VDP_setHorizontalScrollTile(BG_A, 0, offset_mask, 28, DMA);
             }
             if (J1BAIXO)
             {
@@ -154,16 +160,23 @@ int main()
                 if (cursorY < NUM_MUSICAS -1)
                 {
                     cursorY++;
-                    color_index++;
                 }
                 else
                 {
                     cursorY = 0;
+                    
+                }
+                if( color_index < 3)
+                {
+                    color_index++;
+                }
+                else
+                {
                     color_index =0;
                 }
            
-                VDP_clearTextArea(opcoes_musicas[cursorY].x, opcoes_musicas[cursorY].y, 32, 1);
-                VDP_clearTextArea(opcoes_musicas[cursorY].x, 26, 32, 1);
+                VDP_clearTextArea(opcoes_musicas[cursorY].x-2, opcoes_musicas[cursorY].y, 32, 1);
+                VDP_clearTextArea(opcoes_musicas[cursorY].x-2, 26, 32, 1);
                 XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
                 PAL_setColor(19, k7_colors[color_index]);
                       
@@ -175,16 +188,22 @@ int main()
                 if (cursorY > 0)
                 {
                     cursorY--;
-                    color_index--;
                 }
                 else
                 {
                     cursorY = NUM_MUSICAS -1;
-                    color_index = NUM_MUSICAS -1;
+                }
+                if( color_index > 0)
+                {
+                    color_index--;
+                }
+                else
+                {
+                    color_index = 3;
                 }
 
-                VDP_clearTextArea(opcoes_musicas[cursorY].x, opcoes_musicas[cursorY].y, 32, 1);
-                VDP_clearTextArea(opcoes_musicas[cursorY].x, 26, 32, 1);
+                VDP_clearTextArea(opcoes_musicas[cursorY].x-2, opcoes_musicas[cursorY].y, 32, 1);
+                VDP_clearTextArea(opcoes_musicas[cursorY].x-2, 26, 32, 1);
                 XGM_startPlayPCM(SFX_CLICK, 1, SOUND_PCM_CH2);
                 PAL_setColor(19, k7_colors[color_index]);  
             }
@@ -192,6 +211,7 @@ int main()
             {
                 yOffsetBg = yOffsetBg + 8*menu_movendo;
                 VDP_setVerticalScroll(BG_A, yOffsetBg);
+                // VDP_setHorizontalScrollTile(BG_A, 0, offset_mask, 28, DMA);
                 if (yOffsetBg == 128 || yOffsetBg == -128)
                 {
                     yOffsetBg = 0;
@@ -199,11 +219,11 @@ int main()
                     VDP_drawText(opcoes_musicas[cursorY].texto, opcoes_musicas[cursorY].x,opcoes_musicas[cursorY].y);
                     if (cursorY == NUM_MUSICAS - 1)
                     {
-                        VDP_drawText(opcoes_musicas[0].texto, opcoes_musicas[0].x, 26);
+                        VDP_drawText(opcoes_musicas[0].texto, opcoes_musicas[0].x + 1, 26);
                     }
                     else
                     {
-                        VDP_drawText(opcoes_musicas[cursorY +1].texto, opcoes_musicas[cursorY +1].x,26);
+                        VDP_drawText(opcoes_musicas[cursorY +1].texto, opcoes_musicas[cursorY +1].x + 1,26);
                     }
                     PAL_setColor(35, k7_colors[color_index]);
                 }
@@ -218,7 +238,9 @@ int main()
 
                 // SPR_releaseSprite(cursor);
                 VDP_clearTextLine(opcoes_musicas[cursorY].y);
-                VDP_clearTextArea(opcoes_musicas[cursorY].x, 26, 32, 1);
+                VDP_clearTextArea(opcoes_musicas[cursorY].x -2, 26, 32, 1);
+                VDP_setHorizontalScroll(BG_A, 0); //reset horizontal scroll
+                SPR_releaseSprite(sorS);
                 //selec sonic
                 if (cursorY == 0)
                 {
@@ -237,6 +259,18 @@ int main()
                 {
                     musica = GUILE_THEME;
                 }
+                else if (cursorY == 4)
+                {
+                    musica = ZELDA;
+                }
+                else if (cursorY == 5)
+                {
+                    musica = DRACULA;
+                }
+                else if (cursorY == 6)
+                {
+                    musica = TOP_GEAR;
+                }
                 state = MUSICA;
             }
             break;
@@ -248,15 +282,18 @@ int main()
                 //bg_A
                 // VDP_drawImageEx(BG_A, &bga, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
 
-                // VDP_setPlaneSize(128, 64, TRUE);
+                // VDP_setPlaneSize(32, 64, TRUE);
                 VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 
                 VDP_drawImageEx(BG_A, &bga_s, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 5, 0, FALSE, TRUE);
-
+                // VDP_drawImageEx(BG_B, &bgb, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
+                
+                VDP_setPalette(PAL0, Mult.palette->data);
                 VDP_setPalette(PAL1, bga_s.palette->data);
                 VDP_setPalette(PAL2, btR2.palette->data);
                 VDP_setPalette(PAL3, Fogo.palette->data);
                 VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xff0000));
+                VDP_setPaletteColor(0, 0);
 
                 if (resume == 0)
                 {
@@ -271,7 +308,7 @@ int main()
                     fogoY = SPR_addSprite(&Fogo, AMARELO_X+6, ALTURA_MIRA-26, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
 
                     vu = SPR_addSprite(&Vu, 270 , ALTURA_MIRA - 80, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-                    mult_s = SPR_addSprite(&Mult, 270 , ALTURA_MIRA - 120, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    mult_s = SPR_addSprite(&Mult, 280 , ALTURA_MIRA - 100, TILE_ATTR(PAL0, FALSE, FALSE, FALSE));
 
                     SPR_setVisibility(fogoR, HIDDEN);
                     SPR_setVisibility(fogoG, HIDDEN);
@@ -339,6 +376,40 @@ int main()
                         musica_xgm = guile_music;
                         delay = delay_guile;
                         loops = loops_guile;
+                        break;
+                    
+                    case ZELDA:
+                        notas = notas_zelda;
+                        tempos = tempos_zelda;
+                        tamanho_musica = tamanho_zelda;
+                        velocidade = velocidade_zelda;
+                        duracoes = duracao_zelda;
+                        musica_xgm = zelda_music;
+                        delay = delay_zelda;
+                        loops = loops_zelda;
+                        break;
+                    
+                    case DRACULA:
+                        notas = notas_castle;
+                        tempos = tempos_castle;
+                        tamanho_musica = tamanho_castle;
+                        velocidade = velocidade_castle;
+                        duracoes = duracao_castle;
+                        musica_xgm = castle_music;
+                        delay = delay_castle;
+                        loops = loops_castle;
+                        break;
+                    
+                    case TOP_GEAR:
+                        notas = notas_castle;
+                        tempos = tempos_castle;
+                        tamanho_musica = tamanho_castle;
+                        velocidade = velocidade_castle;
+                        duracoes = duracao_castle;
+                        musica_xgm = topGear_music;
+                        delay = delay_castle;
+                        loops = loops_castle;
+                        break;
 
                     default:
                         break;
@@ -503,7 +574,7 @@ int main()
 
             // draw screen
             sprintf(text, "%05d", placar);
-            VDP_drawText(text, 34, 6);
+            VDP_drawText(text, 34, PLACAR_Y);
 
             if(notas_faltando  == 0 && getTick() - final_time > 1000)
             {
@@ -520,7 +591,7 @@ int main()
 
                 SPR_releaseSprite(vu);
                 SPR_releaseSprite(mult_s);
-                VDP_clearTextLine(6);
+                VDP_clearTextLine(PLACAR_Y);
 
                 XGM_stopPlay(musica_xgm);
 
@@ -603,7 +674,7 @@ int main()
 
                     SPR_releaseSprite(vu);
                     SPR_releaseSprite(mult_s);
-                    VDP_clearTextLine(6);
+                    VDP_clearTextLine(PLACAR_Y);
 
                     XGM_stopPlay(musica_xgm);
 

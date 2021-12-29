@@ -11,10 +11,13 @@ const Opcao opcoes_pause[NUM_OPCOES_PAUSA] = {
 };
 
 const Opcao opcoes_musicas[NUM_MUSICAS] = {
-    {CENTRO_X-7, CENTRO_Y-4, "Green Hill Zone"},
-    {CENTRO_X-7, CENTRO_Y-4, "Back in Black"},
-    {CENTRO_X-7, CENTRO_Y-4, "Streets of Rage"},
-    {CENTRO_X-7, CENTRO_Y-4, "Guile theme"},
+    {CENTRO_X-2, CENTRO_Y-4, "Green Hill Zone"},
+    {CENTRO_X-1, CENTRO_Y-4, "Back in Black"},
+    {CENTRO_X-2, CENTRO_Y-4, "Streets of Rage"},
+    {CENTRO_X, CENTRO_Y-4, "Guile theme"},
+    {CENTRO_X-2, CENTRO_Y-4, "Zelda-overworld"},
+    {CENTRO_X-2, CENTRO_Y-4, "Dracula's castle"},
+    {CENTRO_X-2, CENTRO_Y-4, "Top Gear"},
 };
 
 const Opcao opcoes_menu_inicial =  {CENTRO_X -8, CENTRO_Y, "Pressione Start"};

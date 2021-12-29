@@ -27,6 +27,9 @@ typedef enum // Cria uma ENUM para indetificar uma nota
 	BACK_IN_BLACK,
 	STREETS_OF_RAGE,
 	GUILE_THEME,
+	ZELDA,
+	DRACULA,
+	TOP_GEAR,
 } Musica; // Define uma nota
 
 
@@ -75,5 +78,21 @@ const u16 tamanho_guile;
 const u8 velocidade_guile;
 const u16 delay_guile;
 const u8 loops_guile;
+
+const Nota notas_castle[443];
+const u16 duracao_castle[443];
+const u32 tempos_castle[443];
+const u16 tamanho_castle;
+const u8 velocidade_castle;
+const u16 delay_castle;
+const u8 loops_castle;
+
+const Nota notas_zelda[491];
+const u16 duracao_zelda[491];
+const u32 tempos_zelda[491];
+const u16 tamanho_zelda;
+const u8 velocidade_zelda;
+const u16 delay_zelda;
+const u8 loops_zelda;
 
 #endif

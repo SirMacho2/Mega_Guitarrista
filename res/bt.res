@@ -14,4 +14,4 @@ SPRITE Cursor "bt\cursor.png" 1 1 NONE 1
 SPRITE Fogo "bt\fogo.png" 4 5 NONE 6
 
 SPRITE Vu   "bt\vu.png" 6 11 NONE 0
-SPRITE Mult "bt\multiplicador.png" 5 5 NONE 0
+SPRITE Mult "bt\multiplicador.png" 3 3 NONE 0
