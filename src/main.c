@@ -240,7 +240,6 @@ int main()
                 VDP_clearTextLine(opcoes_musicas[cursorY].y);
                 VDP_clearTextArea(opcoes_musicas[cursorY].x -2, 26, 32, 1);
                 VDP_setHorizontalScroll(BG_A, 0); //reset horizontal scroll
-                SPR_releaseSprite(sorS);
                 //selec sonic
                 if (cursorY == 0)
                 {
