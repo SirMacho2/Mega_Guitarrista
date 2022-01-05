@@ -95,4 +95,12 @@ const u8 velocidade_zelda;
 const u16 delay_zelda;
 const u8 loops_zelda;
 
+const Nota notas_topGear[776];
+const u16 duracao_topGear[776];
+const u32 tempos_topGear[776];
+const u16 tamanho_topGear;
+const u8 velocidade_topGear;
+const u16 delay_topGear;
+const u8 loops_topGear;
+
 #endif

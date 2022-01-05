@@ -28,6 +28,7 @@ char text[64];
 
 enum States
 {
+    CREDITOS,
     MENU_INICIAL,
     MUSICA,
     MUSICAS,
@@ -53,11 +54,6 @@ int main()
     controle_iniciaVariaveis();
     JOY_setEventHandler(&controle_Handler);
 
-    // barra_r = SPR_addSprite(&barraR , VEMELHO_X +10, ALTURA_MIRA -7, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-
-    //adicona notas
-    //seleciona palheta das notas
-
     s16 placar = 0;
     u8 consecutivas = 0;
     u8 multiplicador = 1;
@@ -70,7 +66,9 @@ int main()
     u16 nota_index = 0;
     bool resume = 0;
 
-    enum States state = MENU_INICIAL;
+    u32 creditos_time = 0xFFFFFFFF;
+
+    enum States state = CREDITOS;
     enum States state_anterior = -1;
 
     Musica musica = BACK_IN_BLACK;
@@ -101,6 +99,22 @@ int main()
     {
         switch (state)
         {
+            case CREDITOS:
+            if (state_anterior != state)
+            {
+                VDP_clearPlane(BG_A, TRUE);
+                VDP_setVerticalScroll(BG_A, 0);
+                
+                state_anterior = state;
+                VDP_drawImageEx(BG_A, &creditos, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, TRUE, TRUE);
+                creditos_time = getTick();
+            }
+            if(getTick() - creditos_time > 900)
+            {
+                PAL_fadeOutPalette(PAL0, 60, FALSE);
+                state = MENU_INICIAL;
+            }
+            break;
         case MENU_INICIAL:
             if (state_anterior != state)
             {
@@ -114,6 +128,7 @@ int main()
                 cursor = SPR_addSprite(&Cursor, 10 * 8, 14 * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
                 state_anterior = state;
                 VDP_drawImageEx(BG_A, &concert, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
+                PAL_fadeInPalette(PAL0, concert.palette->data, 60, FALSE);
                 VDP_setPalette(PAL0, concert.palette->data);
                 PAL_setColor(15, RGB24_TO_VDPCOLOR(0xffFFFF));
             }
@@ -400,14 +415,14 @@ int main()
                         break;
                     
                     case TOP_GEAR:
-                        notas = notas_castle;
-                        tempos = tempos_castle;
-                        tamanho_musica = tamanho_castle;
-                        velocidade = velocidade_castle;
-                        duracoes = duracao_castle;
+                        notas = notas_topGear;
+                        tempos = tempos_topGear;
+                        tamanho_musica = tamanho_topGear;
+                        velocidade = velocidade_topGear;
+                        duracoes = duracao_topGear;
                         musica_xgm = topGear_music;
-                        delay = delay_castle;
-                        loops = loops_castle;
+                        delay = delay_topGear;
+                        loops = loops_topGear;
                         break;
 
                     default:
