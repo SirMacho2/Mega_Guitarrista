@@ -128,7 +128,7 @@ int main()
                 cursor = SPR_addSprite(&Cursor, 10 * 8, 14 * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
                 state_anterior = state;
                 VDP_drawImageEx(BG_A, &concert, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
-                PAL_fadeInPalette(PAL0, concert.palette->data, 60, FALSE);
+                PAL_fadeInPalette(PAL0, concert.palette->data, 20, FALSE);
                 VDP_setPalette(PAL0, concert.palette->data);
                 PAL_setColor(15, RGB24_TO_VDPCOLOR(0xffFFFF));
             }
@@ -482,6 +482,8 @@ int main()
                     final_time = getTick();
                     break;
                 }
+                char l1 []= "sprites: \0";
+                KLog_S1(l1, SPR_getNumActiveSprite());
             }
             s8 parcial = 0;
             parcial = atualizaPosicao_Nota(velocidade, parcial);
