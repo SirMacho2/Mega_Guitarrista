@@ -13,5 +13,6 @@ extern const Image sont_conver;
 extern const Image zelda_cover;
 extern const Image sor_conver;
 extern const Image guile_cover;
+extern const Image alterd_cover;
 
 #endif // _RES_BG_H_

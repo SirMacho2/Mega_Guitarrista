@@ -2,8 +2,8 @@
 #define __MENU_H__
 
 #include <genesis.h>
+#include "musicas.h"
 
-#define NUM_MUSICAS 7
 #define NUM_OPCOES_PAUSA 3
 #define NUM_OPCOES_FIM 3
 

@@ -293,30 +293,32 @@ int main()
                 {
                     musica = TOP_GEAR;
                 }
+                else if (cursorY == 7)
+                {
+                    musica = ALTERED;
+                }
                 state = MUSICA;
             }
             break;
         case MUSICA:
             if (state_anterior != state)
             {
-                VDP_resetScreen();
-
-                // VDP_setPlaneSize(32, 64, TRUE);
-                VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
-
-                VDP_drawImageEx(BG_A, &bga_s, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, 1), 5, 0, FALSE, TRUE);
-                // VDP_drawImageEx(BG_B, &bgb, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
-                
-                VDP_setPalette(PAL3, Mult.palette->data);
-                VDP_setPalette(PAL1, bga_s.palette->data);
-                VDP_setPalette(PAL2, btR2.palette->data);
-                VDP_setPalette(PAL0, Fogo.palette->data);
-                VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xff0000));
-                VDP_setPaletteColor(0, 0);
-                VDP_setBackgroundColor(0);
-
                 if (resume == 0)
                 {
+                    VDP_resetScreen();
+                    // VDP_setPlaneSize(32, 64, TRUE);
+                    VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
+
+                    VDP_drawImageEx(BG_A, &bga_s, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, 1), 5, 0, FALSE, TRUE);
+                    // VDP_drawImageEx(BG_B, &bgb, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
+                    
+                    VDP_setPalette(PAL3, Mult.palette->data);
+                    VDP_setPalette(PAL1, bga_s.palette->data);
+                    VDP_setPalette(PAL2, btR2.palette->data);
+                    VDP_setPalette(PAL0, Fogo.palette->data);
+                    VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xff0000));
+                    VDP_setPaletteColor(0, 0);
+                    VDP_setBackgroundColor(0);
                     // bts_marca
                     btr2 = SPR_addSprite(&btR2, VEMELHO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
                     btg2 = SPR_addSprite(&btG2, VERDE_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
@@ -430,6 +432,17 @@ int main()
                         musica_xgm = topGear_music;
                         delay = delay_topGear;
                         loops = loops_topGear;
+                        break;
+                    
+                    case ALTERED:
+                        notas = notas_ateredBeast;
+                        tempos = tempos_ateredBeast;
+                        tamanho_musica = tamanho_ateredBeast;
+                        velocidade = velocidade_ateredBeast;
+                        duracoes = duracao_ateredBeast;
+                        musica_xgm = ateredBeast_music;
+                        delay = delay_ateredBeast;
+                        loops = loops_ateredBeast;
                         break;
 
                     default:

@@ -11,3 +11,4 @@ IMAGE sont_conver "bg\sont_conver.png" NONE
 IMAGE zelda_cover "bg\zelda_cover.png" NONE
 IMAGE sor_conver "bg\sor_conver.png" NONE
 IMAGE guile_cover "bg\guile_cover.png" NONE
+IMAGE alterd_cover "bg\alterd_cover.png" NONE

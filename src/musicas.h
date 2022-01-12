@@ -30,21 +30,9 @@ typedef enum // Cria uma ENUM para indetificar uma nota
 	ZELDA,
 	DRACULA,
 	TOP_GEAR,
+	ALTERED,
+	NUM_MUSICAS,
 } Musica; // Define uma nota
-
-
-// typedef struct // Cria uma STRUCT para armazenar os dados de uma nota
-// {
-// 	Nota *notas; // notas que seram tocadas
-// 	s16 *tempos; // intervalo de tempo para proxima nota
-// 	u16 tamanho;
-// 	u8 velocidade;
-// }Musica;
-
-
-
-
-Musica cria_musica(	Nota *notas, s16 *tempos, u16 tamanho,	u8 velocidade);
 
 const u32 tempos_sonic[434];
 const Nota notas_sonic[434];
@@ -102,5 +90,13 @@ const u16 tamanho_topGear;
 const u8 velocidade_topGear;
 const u16 delay_topGear;
 const u8 loops_topGear;
+
+const Nota notas_ateredBeast[125];
+const u16 duracao_ateredBeast[125];
+const u32 tempos_ateredBeast[125];
+const u16 tamanho_ateredBeast;
+const u8 velocidade_ateredBeast;
+const u16 delay_ateredBeast;
+const u8 loops_ateredBeast;
 
 #endif
