@@ -15,3 +15,4 @@ SPRITE Fogo "bt\fogo.png" 4 5 NONE 6
 
 SPRITE Vu   "bt\vu.png" 6 11 NONE 0
 SPRITE Mult "bt\multiplicador.png" 3 3 NONE 0
+SPRITE Guitar "bt\guitarrista.png" 4 6 NONE 18

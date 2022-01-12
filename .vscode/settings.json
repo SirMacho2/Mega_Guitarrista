@@ -18,6 +18,8 @@
         "string": "c",
         "string_view": "c",
         "bt.h": "c",
-        "vdp.h": "c"
+        "vdp.h": "c",
+        "string.h": "c",
+        "menu.h": "c"
     }   
 }

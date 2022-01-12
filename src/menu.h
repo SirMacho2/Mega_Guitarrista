@@ -15,7 +15,15 @@ typedef struct
     char texto[32];
 } Opcao;
 
-const Opcao opcoes_musicas[NUM_MUSICAS];
+typedef struct 
+{
+    s16 x;
+    s16 y;
+    char texto[32];
+    const Image* image;
+} OpcaoMusica;
+
+const OpcaoMusica opcoes_musicas[NUM_MUSICAS];
 const Opcao opcoes_pause[NUM_OPCOES_FIM];
 const Opcao opcoes_fim[NUM_OPCOES_FIM];
 

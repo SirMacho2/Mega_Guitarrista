@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "string.h"
+#include "bg.h"
 
 #define CENTRO_X 20
 #define CENTRO_Y 14
@@ -10,14 +11,14 @@ const Opcao opcoes_pause[NUM_OPCOES_PAUSA] = {
     {CENTRO_X-2, CENTRO_Y+2, "REINICIAR"},
 };
 
-const Opcao opcoes_musicas[NUM_MUSICAS] = {
-    {CENTRO_X-2, CENTRO_Y-4, "Green Hill Zone"},
-    {CENTRO_X-1, CENTRO_Y-4, "Back in Black"},
-    {CENTRO_X-2, CENTRO_Y-4, "Streets of Rage"},
-    {CENTRO_X, CENTRO_Y-4, "Guile theme"},
-    {CENTRO_X-2, CENTRO_Y-4, "Zelda-overworld"},
-    {CENTRO_X-2, CENTRO_Y-4, "Dracula's castle"},
-    {CENTRO_X-2, CENTRO_Y-4, "Top Gear"},
+const OpcaoMusica opcoes_musicas[NUM_MUSICAS] = {
+    {CENTRO_X-2, CENTRO_Y-4, "Green Hill Zone", &sonic_cover},
+    {CENTRO_X-1, CENTRO_Y-4, "Back in Black",  &sonic_cover},
+    {CENTRO_X-2, CENTRO_Y-4, "Streets of Rage",  &sor_conver},
+    {CENTRO_X, CENTRO_Y-4, "Guile theme",  &guile_cover},
+    {CENTRO_X-2, CENTRO_Y-4, "Zelda-overworld",  &zelda_cover},
+    {CENTRO_X-2, CENTRO_Y-4, "Dracula's castle",  &sont_conver},
+    {CENTRO_X-2, CENTRO_Y-4, "Top Gear",  &topgear_cover},
 };
 
 const Opcao opcoes_menu_inicial =  {CENTRO_X -8, CENTRO_Y, "Pressione Start"};
