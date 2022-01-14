@@ -28,9 +28,10 @@ u8 Insere_Nota(Sprite *sprite, s16 x, s16 y, Nota tipo)
     LNotas *p;
     // MEM_pack();
     p = (LNotas *)MEM_alloc(sizeof(LNotas));
-    if (p == NULL)
+    if (p == NULL || sprite == NULL)
     {
         // erro de alocação
+        KLog("error in allocation");
         return 0;
     }
     
@@ -71,9 +72,10 @@ u8 Insere_Barra(Sprite *sprite, s16 x, s16 y, Nota tipo, s16 duracao)
     
     // MEM_pack();
     p = (LBarras *)MEM_alloc(sizeof(LBarras));
-    if (p == NULL)
+    if (p == NULL || sprite == NULL)
     {
         // erro de alocação
+        KLog("error in allocation");
         return 0;
     }
     
@@ -153,25 +155,6 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
         while (ptr != NULL)
         {
             ptr->y = ptr->y + velocidade;
-
-            if(ptr->tipo == AMARELA)
-            {
-                ptr->x = ptr->x - fix16Mul(SCALE, v);
-                SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
-            }
-            else if(ptr->tipo == VEMELHA)
-            {
-                ptr->x = ptr->x + fix16Mul(SCALE, v);
-                SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
-            }
-            else
-            {
-                SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
-            } 
-            if((ptr->y - ALTURA_PISTA) % 15 == 0 && ptr->y < 210)
-            {
-                SPR_setFrame(ptr->sprite, (ptr->y - ALTURA_PISTA)/15);
-            }
             if (ptr->y >= ALTURA) // passou do limite
             {
                 if(SPR_isVisible(ptr->sprite, 1))
@@ -180,52 +163,70 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                 }
                 if (ptr == inicio_Nota) // se esta removendo o primeiro da lista
                 {
-                    // inicio = inicio->prox;
                     inicio_Nota = NULL;
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr);
-                    return placar;
                 }
                 else // esta removendo do meio da lista
                 {
                     antes->prox = ptr->prox; // Refaz o encadeamento
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr); // Libera a area do nodo
-                    // ptr = antes->prox;
-                    break;
+                    ptr = antes->prox;
                 }
             }
-            if(ptr->y > ALTURA_MIRA - 15 && ptr->y < ALTURA_MIRA + 15 )
+            else
             {
-                if(SPR_isVisible(ptr->sprite, 1))
+                if(ptr->tipo == AMARELA)
                 {
-                    // sobe placar e deixa sprite invisivel 
-                    if( ptr->tipo == AMARELA && J1A )
+                    ptr->x = ptr->x - fix16Mul(SCALE, v);
+                    SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
+                }
+                else if(ptr->tipo == VEMELHA)
+                {
+                    ptr->x = ptr->x + fix16Mul(SCALE, v);
+                    SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
+                }
+                else
+                {
+                    SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
+                } 
+                if((ptr->y - ALTURA_PISTA) % 15 == 0 && ptr->y < 210)
+                {
+                    SPR_setFrame(ptr->sprite, (ptr->y - ALTURA_PISTA)/15);
+                }
+                if(ptr->y > ALTURA_MIRA - 15 && ptr->y < ALTURA_MIRA + 15 )
+                {
+                    if(SPR_isVisible(ptr->sprite, 1))
                     {
-                        placar++;
-                        J1A = 0;
-                        SPR_setVisibility(ptr->sprite, HIDDEN);
-                        SPR_setFrame(fogoY,0);
-                        SPR_setVisibility(fogoY, VISIBLE);
-                        tempoFogoY = getTick();
-                    }
-                    if(ptr->tipo == VERDE && J1B)
-                    {
-                        placar++;
-                        J1B = 0;
-                        SPR_setVisibility(ptr->sprite, HIDDEN);
-                        SPR_setFrame(fogoG,0);
-                        SPR_setVisibility(fogoG, VISIBLE);
-                        tempoFogoG = getTick();
-                    }
-                    if (ptr->tipo ==  VEMELHA && J1C )
-                    {
-                        placar++;
-                        J1C = 0;
-                        SPR_setVisibility(ptr->sprite, HIDDEN);
-                        SPR_setFrame(fogoR,0);
-                        SPR_setVisibility(fogoR, VISIBLE);
-                        tempoFogoR = getTick();
+                        // sobe placar e deixa sprite invisivel 
+                        if( ptr->tipo == AMARELA && J1A )
+                        {
+                            placar++;
+                            J1A = 0;
+                            SPR_setVisibility(ptr->sprite, HIDDEN);
+                            SPR_setFrame(fogoY,0);
+                            SPR_setVisibility(fogoY, VISIBLE);
+                            tempoFogoY = getTick();
+                        }
+                        if(ptr->tipo == VERDE && J1B)
+                        {
+                            placar++;
+                            J1B = 0;
+                            SPR_setVisibility(ptr->sprite, HIDDEN);
+                            SPR_setFrame(fogoG,0);
+                            SPR_setVisibility(fogoG, VISIBLE);
+                            tempoFogoG = getTick();
+                        }
+                        if (ptr->tipo ==  VEMELHA && J1C )
+                        {
+                            placar++;
+                            J1C = 0;
+                            SPR_setVisibility(ptr->sprite, HIDDEN);
+                            SPR_setFrame(fogoR,0);
+                            SPR_setVisibility(fogoR, VISIBLE);
+                            tempoFogoR = getTick();
+                        }
                     }
                 }
             }
@@ -256,35 +257,6 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
         {
             ptr->y = ptr->y + velocidade;
 
-            if(ptr->tipo == AMARELA)
-            {
-                ptr->x = ptr->x - fix16Mul(SCALE, v);
-                SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
-            }
-            else if(ptr->tipo == VEMELHA)
-            {
-                ptr->x = ptr->x + fix16Mul(SCALE, v);
-                SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
-            }
-            else
-            {
-                SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
-            }             
-            if(ptr->duracao > 0 && ptr->y == 8 + ALTURA_PISTA)
-            {
-                if(ptr->tipo == AMARELA)
-                {
-                    Insere_Barra(SPR_addSprite(&barraY , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_B_X_INICIO, ALTURA_PISTA, AMARELA, ptr->duracao-45);
-                }
-                if(ptr->tipo == VERDE)
-                {
-                    Insere_Barra(SPR_addSprite(&barraG , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, ALTURA_PISTA, VERDE, ptr->duracao-45);
-                }
-                if(ptr->tipo == VEMELHA)
-                {
-                    Insere_Barra(SPR_addSprite(&barraR , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_B_X_INICIO, ALTURA_PISTA, VEMELHA, ptr->duracao-45);
-                }
-            }
             if (ptr->y >= ALTURA) // passou do limite
             {
                 if (ptr == inicio_Barra) // se esta removendo o primeiro da lista
@@ -301,44 +273,76 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                     ptr = antes->prox;
                 }
             }
-            if(ptr->y > ALTURA_MIRA - 5 && ptr->y < ALTURA_MIRA + 7 )
+            else
             {
-                u16 JOY1 = JOY_readJoypad(JOY_1);
-                if(SPR_isVisible(ptr->sprite, 1))
+                if(ptr->tipo == AMARELA)
                 {
-                    // sobe placar e deixa sprite invisivel                         200
-                    if( ptr->tipo == AMARELA)
+                    ptr->x = ptr->x - fix16Mul(SCALE, v);
+                    SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
+                }
+                else if(ptr->tipo == VEMELHA)
+                {
+                    ptr->x = ptr->x + fix16Mul(SCALE, v);
+                    SPR_setPosition(ptr->sprite,  fix16ToInt(ptr->x), ptr->y);
+                }
+                else
+                {
+                    SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
+                }             
+                if(ptr->duracao > 0 && ptr->y == 8 + ALTURA_PISTA)
+                {
+                    if(ptr->tipo == AMARELA)
                     {
-                        if ((JOY1 & BUTTON_A))
-                        {
-                            placar++;
-                            SPR_setVisibility(ptr->sprite, HIDDEN);
-                            SPR_setFrame(fogoY,0);
-                            SPR_setVisibility(fogoY, VISIBLE);
-                            tempoFogoY = getTick();
-                        }
-                        
+                        Insere_Barra(SPR_addSprite(&barraY , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_B_X_INICIO, ALTURA_PISTA, AMARELA, ptr->duracao-45);
                     }
-                    if(ptr->tipo == VERDE )
+                    if(ptr->tipo == VERDE)
                     {
-                        if ((JOY1 & BUTTON_B))
-                        {
-                            placar++;
-                            SPR_setVisibility(ptr->sprite, HIDDEN);
-                            SPR_setFrame(fogoG,0);
-                            SPR_setVisibility(fogoG, VISIBLE);
-                            tempoFogoG = getTick();
-                        }
+                        Insere_Barra(SPR_addSprite(&barraG , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, ALTURA_PISTA, VERDE, ptr->duracao-45);
                     }
-                    if (ptr->tipo ==  VEMELHA)
+                    if(ptr->tipo == VEMELHA)
                     {
-                         if ((JOY1 & BUTTON_C))
+                        Insere_Barra(SPR_addSprite(&barraR , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_B_X_INICIO, ALTURA_PISTA, VEMELHA, ptr->duracao-45);
+                    }
+                }
+                if(ptr->y > ALTURA_MIRA - 5 && ptr->y < ALTURA_MIRA + 7 )
+                {
+                    u16 JOY1 = JOY_readJoypad(JOY_1);
+                    if(SPR_isVisible(ptr->sprite, 1))
+                    {
+                        // sobe placar e deixa sprite invisivel                         200
+                        if( ptr->tipo == AMARELA)
                         {
-                            placar++;
-                            SPR_setVisibility(ptr->sprite, HIDDEN);
-                            SPR_setFrame(fogoR,0);
-                            SPR_setVisibility(fogoR, VISIBLE);    
-                            tempoFogoR = getTick();
+                            if ((JOY1 & BUTTON_A))
+                            {
+                                placar++;
+                                SPR_setVisibility(ptr->sprite, HIDDEN);
+                                SPR_setFrame(fogoY,0);
+                                SPR_setVisibility(fogoY, VISIBLE);
+                                tempoFogoY = getTick();
+                            }
+                            
+                        }
+                        if(ptr->tipo == VERDE )
+                        {
+                            if ((JOY1 & BUTTON_B))
+                            {
+                                placar++;
+                                SPR_setVisibility(ptr->sprite, HIDDEN);
+                                SPR_setFrame(fogoG,0);
+                                SPR_setVisibility(fogoG, VISIBLE);
+                                tempoFogoG = getTick();
+                            }
+                        }
+                        if (ptr->tipo ==  VEMELHA)
+                        {
+                            if ((JOY1 & BUTTON_C))
+                            {
+                                placar++;
+                                SPR_setVisibility(ptr->sprite, HIDDEN);
+                                SPR_setFrame(fogoR,0);
+                                SPR_setVisibility(fogoR, VISIBLE);    
+                                tempoFogoR = getTick();
+                            }
                         }
                     }
                 }

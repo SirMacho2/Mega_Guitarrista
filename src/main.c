@@ -526,8 +526,6 @@ int main()
                     final_time = getTick();
                     break;
                 }
-                char l1 []= "sprites: \0";
-                KLog_S1(l1, SPR_getNumActiveSprite());
             }
             s8 parcial = 0;
             parcial = atualizaPosicao_Nota(velocidade, parcial);
@@ -853,6 +851,7 @@ int main()
             break;
         }
         SPR_update();
+        // KLog_S1("sprites: \0", SPR_getNumActiveSprite());
         SYS_doVBlankProcess();
     }
     return (0);
