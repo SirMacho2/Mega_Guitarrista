@@ -17,7 +17,12 @@
 #define SFX_ERROR 64
 #define SFX_CLICK 65
 
-#define PLACAR_Y 9
+#define PLACAR_Y 7
+
+#define ALTURA_VU ALTURA_MIRA - 100
+#define ALTURA_MULTIPLICADOR ALTURA_VU - 18
+#define ALTURA_GUITARRISTA ALTURA_VU - 42
+
 
 Sprite *btr2, *btg2, *bty2;
 Sprite *cursor;
@@ -26,6 +31,7 @@ Sprite *mult_s;
 Sprite *guitarrista;
 
 char text[64];
+
 
 enum States
 {
@@ -95,7 +101,6 @@ int main()
     
     s16 offset_mask [28] = {19, 17, 15, 14, 12, 10, 9, 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 6, 6, 7, 8, 9, 10, 12, 14, 15, 17, 19};
 
-    VDP_setTextPlane(BG_B);
     while (1)
     {
         switch (state)
@@ -119,8 +124,10 @@ int main()
         case MENU_INICIAL:
             if (state_anterior != state)
             {
-                VDP_clearPlane(BG_A, TRUE);
-                VDP_setVerticalScroll(BG_A, 0);
+                VDP_setTextPlane(BG_B);
+                // VDP_clearPlane(BG_A, TRUE);
+                // VDP_setVerticalScroll(BG_A, 0);
+                VDP_resetScreen();
                 VDP_setPaletteColors(0, (u16 *)palette_black, 64); // set all palettes to black
                 
                 VDP_setPalette(PAL3, Cursor.palette->data);
@@ -145,6 +152,7 @@ int main()
         case MUSICAS:
             if (state_anterior != state)
             {
+                VDP_setTextPlane(BG_B);
                 yOffsetBg =0;
                 VDP_setScrollingMode(HSCROLL_TILE , VSCROLL_PLANE);
                 VDP_clearPlane(BG_A, TRUE);
@@ -157,7 +165,6 @@ int main()
                 state_anterior = state;
                 J1BAIXO = 0;
                 J1CIMA = 0;
-
                 VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL1, FALSE, FALSE, FALSE), 15, -9, FALSE, TRUE);
                 VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL2, FALSE, FALSE, FALSE), 15, 7, FALSE, TRUE);
                 VDP_drawImageEx(BG_B, &sonic_cover, TILE_ATTR_FULL(PAL3, TRUE, FALSE, FALSE, k7.tileset->numTile), 1, 7, FALSE, TRUE);
@@ -307,17 +314,19 @@ int main()
         case MUSICA:
             if (state_anterior != state)
             {
+                VDP_setTextPlane(BG_A);
                 if (resume == 0)
                 {
                     VDP_resetScreen();
                     // VDP_setPlaneSize(32, 64, TRUE);
                     VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 
-                    VDP_drawImageEx(BG_A, &bga_s, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, 1), 5, 0, FALSE, TRUE);
-                    // VDP_drawImageEx(BG_B, &bgb, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
+                    VDP_drawImageEx(BG_A, &blank, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, 0), 0, 0, FALSE, TRUE);
+                    VDP_drawImageEx(BG_B, &bg_musica, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, blank.tileset->numTile), 0, 0, FALSE, TRUE);
+                    
                     
                     VDP_setPalette(PAL3, Mult.palette->data);
-                    VDP_setPalette(PAL1, bga_s.palette->data);
+                    VDP_setPalette(PAL1, bg_musica.palette->data);
                     VDP_setPalette(PAL2, btR2.palette->data);
                     VDP_setPalette(PAL0, Fogo.palette->data);
                     VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xff0000));
@@ -333,9 +342,9 @@ int main()
                     fogoG = SPR_addSprite(&Fogo, VERDE_X+6, ALTURA_MIRA-26, TILE_ATTR(PAL0, FALSE, FALSE, FALSE));
                     fogoY = SPR_addSprite(&Fogo, AMARELO_X+6, ALTURA_MIRA-26, TILE_ATTR(PAL0, FALSE, FALSE, FALSE));
 
-                    vu = SPR_addSprite(&Vu, 270 , ALTURA_MIRA - 70, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-                    mult_s = SPR_addSprite(&Mult, 290 , ALTURA_MIRA - 88, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
-                    guitarrista = SPR_addSprite(&Guitar,  260 , ALTURA_MIRA - 112, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                    vu = SPR_addSprite(&Vu, 270 , ALTURA_VU, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    mult_s = SPR_addSprite(&Mult, 290 , ALTURA_MULTIPLICADOR, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
+                    guitarrista = SPR_addSprite(&Guitar,  260 , ALTURA_GUITARRISTA, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
 
                     SPR_setVisibility(fogoR, HIDDEN);
                     SPR_setVisibility(fogoG, HIDDEN);
@@ -485,26 +494,26 @@ int main()
             {
                 if (notas[nota_index] & AMARELA)
                 {
-                    Insere_Nota(SPR_addSprite(&btY, AMARELO_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_X, 0);
+                    Insere_Nota(SPR_addSprite(&btY, 0, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_X_INICIO, ALTURA_PISTA, AMARELA);
                     if (duracoes[nota_index] > 0)
                     {
-                        Insere_Barra(SPR_addSprite(&barraY, AMARELO_B_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_B_X, 0, duracoes[nota_index]);
+                        Insere_Barra(SPR_addSprite(&barraY, AMARELO_B_X, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_B_X_INICIO, ALTURA_PISTA, AMARELA, duracoes[nota_index]);
                     }
                 }
                 else if (notas[nota_index] & VERDE)
                 {
-                    Insere_Nota(SPR_addSprite(&btG, VERDE_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VERDE_X, 0);
+                    Insere_Nota(SPR_addSprite(&btG, VERDE_X, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VERDE_X, ALTURA_PISTA, VERDE);
                     if (duracoes[nota_index] > 0)
                     {
-                        Insere_Barra(SPR_addSprite(&barraG, VERDE_B_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VERDE_B_X, 0, duracoes[nota_index]);
+                        Insere_Barra(SPR_addSprite(&barraG, VERDE_B_X, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VERDE_B_X, ALTURA_PISTA, VERDE, duracoes[nota_index]);
                     }
                 }
                 else if (notas[nota_index] & VEMELHA)
                 {
-                    Insere_Nota(SPR_addSprite(&btR, VEMELHO_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_X, 0);
+                    Insere_Nota(SPR_addSprite(&btR, VEMELHO_X, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_X_INICIO, ALTURA_PISTA, VEMELHA);
                     if (duracoes[nota_index] > 0)
                     {
-                        Insere_Barra(SPR_addSprite(&barraR, VEMELHO_B_X, 0, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_B_X, 0, duracoes[nota_index]);
+                        Insere_Barra(SPR_addSprite(&barraR, VEMELHO_B_X, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_B_X_INICIO, ALTURA_PISTA, VEMELHA, duracoes[nota_index]);
                     }
                 }
                 if (nota_index < tamanho_musica-1)
@@ -620,12 +629,12 @@ int main()
                 SPR_setFrame(btr2, 0);
             }
 
-            yOffsetBg -= velocidade;
-            if (yOffsetBg < 0)
-            {
-                yOffsetBg += 512;
-            }
-            VDP_setVerticalScroll(BG_A, yOffsetBg);
+            // yOffsetBg -= velocidade;
+            // if (yOffsetBg < 0)
+            // {
+            //     yOffsetBg += 512;
+            // }
+            // VDP_setVerticalScroll(BG_A, yOffsetBg);
 
             // draw screen
             sprintf(text, "%05d", placar);
@@ -659,6 +668,7 @@ int main()
         case PAUSA:
             if (state_anterior != state)
             {
+                VDP_setTextPlane(BG_A);
                 state_anterior = state;
                 mostra_menu_pausa();
                 // VDP_setPalette(PAL3, Cursor.palette->data);
@@ -773,8 +783,8 @@ int main()
         case FIM_MUSICA:
             if (state_anterior != state)
             {
-                VDP_clearPlane(BG_A, TRUE);
-                VDP_setVerticalScroll(BG_A, 0);
+                VDP_setTextPlane(BG_B);
+                VDP_resetScreen();
                 VDP_setPaletteColors(0, (u16 *)palette_black, 64); // set all palettes to black
                 state_anterior = state;
                 mostra_menu(opcoes_fim, NUM_OPCOES_FIM);

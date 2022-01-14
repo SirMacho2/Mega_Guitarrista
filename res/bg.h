@@ -7,6 +7,8 @@ extern const Image bga_sonic;
 extern const Image k7;
 extern const Image concert;
 extern const Image creditos;
+extern const Image bg_musica;
+extern const Image blank;
 extern const Image sonic_cover;
 extern const Image topgear_cover;
 extern const Image sont_conver;
