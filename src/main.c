@@ -297,6 +297,10 @@ int main()
                 {
                     musica = ALTERED;
                 }
+                else if (cursorY == 8)
+                {
+                    musica = SMOOTH;
+                }
                 state = MUSICA;
             }
             break;
@@ -443,6 +447,17 @@ int main()
                         musica_xgm = ateredBeast_music;
                         delay = delay_ateredBeast;
                         loops = loops_ateredBeast;
+                        break;
+                    
+                    case SMOOTH:
+                        notas = notas_smooth;
+                        tempos = tempos_smooth;
+                        tamanho_musica = tamanho_smooth;
+                        velocidade = velocidade_smooth;
+                        duracoes = duracao_smooth;
+                        musica_xgm = smooth_music;
+                        delay = delay_smooth;
+                        loops = loops_smooth;
                         break;
 
                     default:

@@ -20,6 +20,7 @@ const OpcaoMusica opcoes_musicas[NUM_MUSICAS] = {
     {CENTRO_X-2, CENTRO_Y-4, "Dracula's castle",  &sont_conver},
     {CENTRO_X-2, CENTRO_Y-4, "Top Gear",  &topgear_cover},
     {CENTRO_X-2, CENTRO_Y-4, "Altered Beast",  &alterd_cover},
+    {CENTRO_X-2, CENTRO_Y-4, "Smooth Criminal",  &sonic_cover},
 };
 
 const Opcao opcoes_menu_inicial =  {CENTRO_X -8, CENTRO_Y, "Pressione Start"};

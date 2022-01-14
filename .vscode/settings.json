@@ -20,6 +20,7 @@
         "bt.h": "c",
         "vdp.h": "c",
         "string.h": "c",
-        "menu.h": "c"
+        "menu.h": "c",
+        "memory.h": "c"
     }   
 }

@@ -31,6 +31,7 @@ typedef enum // Cria uma ENUM para indetificar uma nota
 	DRACULA,
 	TOP_GEAR,
 	ALTERED,
+	SMOOTH,
 	NUM_MUSICAS,
 } Musica; // Define uma nota
 
@@ -98,5 +99,13 @@ const u16 tamanho_ateredBeast;
 const u8 velocidade_ateredBeast;
 const u16 delay_ateredBeast;
 const u8 loops_ateredBeast;
+
+const Nota notas_smooth[404];
+const u16 duracao_smooth[404];
+const u32 tempos_smooth[404];
+const u16 tamanho_smooth;
+const u8 velocidade_smooth;
+const u16 delay_smooth;
+const u8 loops_smooth;
 
 #endif
