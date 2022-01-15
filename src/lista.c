@@ -31,7 +31,7 @@ u8 Insere_Nota(Sprite *sprite, s16 x, s16 y, Nota tipo)
     if (p == NULL || sprite == NULL)
     {
         // erro de alocação
-        KLog("error in allocation");
+        // KLog("error in allocation");
         return 0;
     }
     
@@ -75,7 +75,7 @@ u8 Insere_Barra(Sprite *sprite, s16 x, s16 y, Nota tipo, s16 duracao)
     if (p == NULL || sprite == NULL)
     {
         // erro de alocação
-        KLog("error in allocation");
+        // KLog("error in allocation");
         return 0;
     }
     
@@ -152,6 +152,7 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
         antes = inicio_Nota;
 
         f16 v = intToFix16(velocidade);
+        bool update = FALSE;
         while (ptr != NULL)
         {
             ptr->y = ptr->y + velocidade;
@@ -163,9 +164,11 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                 }
                 if (ptr == inicio_Nota) // se esta removendo o primeiro da lista
                 {
-                    inicio_Nota = NULL;
+                    inicio_Nota = inicio_Nota->prox;
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr);
+                    update = TRUE;
+                    // KLog("removendo do inicio\0");
                 }
                 else // esta removendo do meio da lista
                 {
@@ -173,6 +176,8 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr); // Libera a area do nodo
                     ptr = antes->prox;
+                    update = TRUE;
+                    // KLog("removendo do meio\0");
                 }
             }
             else
@@ -230,8 +235,15 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                     }
                 }
             }
-            antes = ptr;
-            ptr = ptr->prox;
+            if(update == FALSE)
+            {    
+                antes = ptr;
+                ptr = ptr->prox;
+            }
+            else
+            {
+                update = FALSE;
+            }
         }
     }
     return placar;
@@ -253,6 +265,7 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
         ptr = inicio_Barra;
         antes = inicio_Barra;
         f16 v = intToFix16(velocidade);
+        bool update = FALSE;
         while (ptr != NULL)
         {
             ptr->y = ptr->y + velocidade;
@@ -264,6 +277,7 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                     inicio_Barra = inicio_Barra->prox;
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr);
+                    update = TRUE;
                 }
                 else // esta removendo do meio da lista
                 {
@@ -271,6 +285,7 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr); // Libera a area do nodo
                     ptr = antes->prox;
+                    update = TRUE;
                 }
             }
             else
@@ -347,8 +362,15 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                     }
                 }
             }
-            antes = ptr;
-            ptr = ptr->prox;
+            if(update == FALSE)
+            {    
+                antes = ptr;
+                ptr = ptr->prox;
+            }
+            else
+            {
+                update = FALSE;
+            }
         }
     }
     return placar;
