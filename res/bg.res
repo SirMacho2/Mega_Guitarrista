@@ -4,7 +4,7 @@ IMAGE bga_sonic "bg\bga_sonic2.png" NONE
 IMAGE k7 "bg\k7-d.png" NONE
 IMAGE concert "bg\concert-2.png" NONE
 IMAGE creditos "bg\creditos-2.png" NONE
-IMAGE bg_musica "bg\bg_musica.png" NONE
+IMAGE bg_musica "bg\bg_musica-2.png" NONE
 IMAGE blank "bg\blank.bmp" NONE
 
 IMAGE sonic_cover "bg\sonic_cover.png" NONE

@@ -333,14 +333,14 @@ int main()
                     VDP_setPaletteColor(0, 0);
                     VDP_setBackgroundColor(0);
                     // bts_marca
-                    btr2 = SPR_addSprite(&btR2, VEMELHO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-                    btg2 = SPR_addSprite(&btG2, VERDE_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
-                    bty2 = SPR_addSprite(&btY2, AMARELO_X, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    btr2 = SPR_addSprite(&btR2, VEMELHO_X+1, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    btg2 = SPR_addSprite(&btG2, VERDE_X+1, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
+                    bty2 = SPR_addSprite(&btY2, AMARELO_X+2, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
 
 
-                    fogoR = SPR_addSprite(&Fogo, VEMELHO_X+6, ALTURA_MIRA-26, TILE_ATTR(PAL0, FALSE, FALSE, FALSE));
-                    fogoG = SPR_addSprite(&Fogo, VERDE_X+6, ALTURA_MIRA-26, TILE_ATTR(PAL0, FALSE, FALSE, FALSE));
-                    fogoY = SPR_addSprite(&Fogo, AMARELO_X+6, ALTURA_MIRA-26, TILE_ATTR(PAL0, FALSE, FALSE, FALSE));
+                    fogoR = SPR_addSprite(&Fogo, VEMELHO_X+7, ALTURA_MIRA-26, TILE_ATTR(PAL0, FALSE, FALSE, FALSE));
+                    fogoG = SPR_addSprite(&Fogo, VERDE_X+7, ALTURA_MIRA-26, TILE_ATTR(PAL0, FALSE, FALSE, FALSE));
+                    fogoY = SPR_addSprite(&Fogo, AMARELO_X+8, ALTURA_MIRA-26, TILE_ATTR(PAL0, FALSE, FALSE, FALSE));
 
                     vu = SPR_addSprite(&Vu, 270 , ALTURA_VU, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
                     mult_s = SPR_addSprite(&Mult, 290 , ALTURA_MULTIPLICADOR, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));

@@ -9,7 +9,7 @@
 #define LARGURA 320
 #define ALTURA 224
 #define ALTURA_MIRA 195
-#define ALTURA_PISTA 90
+#define ALTURA_PISTA 62
 
 // define a estrutura do nodo
 typedef struct Temp

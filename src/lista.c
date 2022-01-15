@@ -191,9 +191,9 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                 {
                     SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
                 } 
-                if((ptr->y - ALTURA_PISTA) % 15 == 0 && ptr->y < 210)
+                if((ptr->y - ALTURA_PISTA) % 19 == 0 && ptr->y < 214) // Divide a pista em 7 seguimentos de 19px de altura cada um com um tamanho de nota
                 {
-                    SPR_setFrame(ptr->sprite, (ptr->y - ALTURA_PISTA)/15);
+                    SPR_setFrame(ptr->sprite, (ptr->y - ALTURA_PISTA)/19);
                 }
                 if(ptr->y > ALTURA_MIRA - 15 && ptr->y < ALTURA_MIRA + 15 )
                 {
