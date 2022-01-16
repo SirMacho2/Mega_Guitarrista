@@ -12,15 +12,16 @@ const Opcao opcoes_pause[NUM_OPCOES_PAUSA] = {
 };
 
 const OpcaoMusica opcoes_musicas[NUM_MUSICAS] = {
-    {CENTRO_X-2, CENTRO_Y-4, "Green Hill Zone", &sonic_cover},
-    {CENTRO_X-1, CENTRO_Y-4, "Back in Black",  &sonic_cover},
-    {CENTRO_X-2, CENTRO_Y-4, "Streets of Rage",  &sor_conver},
-    {CENTRO_X, CENTRO_Y-4, "Guile theme",  &guile_cover},
-    {CENTRO_X-2, CENTRO_Y-4, "Zelda-overworld",  &zelda_cover},
-    {CENTRO_X-2, CENTRO_Y-4, "Dracula's castle",  &sont_conver},
-    {CENTRO_X-2, CENTRO_Y-4, "Top Gear",  &topgear_cover},
-    {CENTRO_X-2, CENTRO_Y-4, "Altered Beast",  &alterd_cover},
-    {CENTRO_X-2, CENTRO_Y-4, "Smooth Criminal",  &moonwalker_conver},
+    {CENTRO_X-2, CENTRO_Y-4, "Green Hill Zone", &sonic_cover, 3},
+    {CENTRO_X-1, CENTRO_Y-4, "Back in Black",  &sonic_cover, 1},
+    {CENTRO_X-2, CENTRO_Y-4, "Streets of Rage",  &sor_conver, 2},
+    {CENTRO_X, CENTRO_Y-4, "Guile theme",  &guile_cover, 2},
+    {CENTRO_X-2, CENTRO_Y-4, "Zelda-overworld",  &zelda_cover, 3},
+    {CENTRO_X-2, CENTRO_Y-4, "Dracula's castle",  &sont_conver, 2},
+    {CENTRO_X-2, CENTRO_Y-4, "Top Gear",  &topgear_cover, 3},
+    {CENTRO_X-2, CENTRO_Y-4, "Altered Beast",  &alterd_cover, 1},
+    {CENTRO_X-2, CENTRO_Y-4, "Smooth Criminal",  &moonwalker_conver, 1},
+    {CENTRO_X-2, CENTRO_Y-4, "Motavia Town",  &phantasy_cover, 1},
 };
 
 const Opcao opcoes_menu_inicial =  {CENTRO_X -8, CENTRO_Y, "Pressione Start"};

@@ -167,6 +167,7 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                     inicio_Nota = inicio_Nota->prox;
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr);
+                    ptr = inicio_Nota;
                     update = TRUE;
                 }
                 else // esta removendo do meio da lista
@@ -275,6 +276,7 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                     inicio_Barra = inicio_Barra->prox;
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr);
+                    ptr = inicio_Barra;
                     update = TRUE;
                 }
                 else // esta removendo do meio da lista

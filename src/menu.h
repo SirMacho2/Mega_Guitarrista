@@ -21,6 +21,7 @@ typedef struct
     s16 y;
     char texto[32];
     const Image* image;
+    u8 dificulade;
 } OpcaoMusica;
 
 const OpcaoMusica opcoes_musicas[NUM_MUSICAS];

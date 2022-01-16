@@ -7,6 +7,7 @@ XGM castle_music "music\dracula-s-castle.vgm"
 XGM topGear_music "music\Top Gear.vgm"
 XGM ateredBeast_music "music\Rise from Your Grave.vgm"
 XGM smooth_music "music\Smooth Criminal.vgm"
+XGM phantasy_music "music\Motavia Town.vgm"
 
 WAV error_sfx "sfx/erro.wav" XGM
 WAV click_sfx "sfx/click.wav" XGM

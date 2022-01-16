@@ -36,6 +36,7 @@ typedef enum // Cria uma ENUM para indetificar uma nota
 	TOP_GEAR,
 	ALTERED,
 	SMOOTH,
+	PHATASY,
 	NUM_MUSICAS,
 } Musica; // Define uma nota
 
@@ -111,5 +112,13 @@ const u16 tamanho_smooth;
 const u8 velocidade_smooth;
 const u16 delay_smooth;
 const u8 loops_smooth;
+
+const Nota notas_phantasy[119];
+const u16 duracao_phantasy[119];
+const u32 tempos_phantasy[119];
+const u16 tamanho_phantasy;
+const u8 velocidade_phantasy;
+const u16 delay_phantasy;
+const u8 loops_phantasy;
 
 #endif

@@ -13,6 +13,6 @@ SPRITE barraY "bt\barra_y.png" 1 1 NONE 0
 SPRITE Cursor "bt\cursor.png" 1 1 NONE 0
 SPRITE Fogo "bt\fogo.png" 4 5 NONE 6
 
-SPRITE Vu   "bt\vu.png" 6 11 NONE 0
+SPRITE Vu   "bt\vu-2.png" 6 11 NONE 0
 SPRITE Mult "bt\multiplicador_d.png" 3 3 NONE 0
 SPRITE Guitar "bt\guitarrista_d.png" 4 6 NONE 18

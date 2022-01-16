@@ -93,6 +93,8 @@ int main()
     s16 cursorX;
 
     s16 yOffsetBg = 0;
+    
+    s16 xOffsetsky[32]= {0};
 
     s8 menu_movendo = 0;
 
@@ -308,6 +310,10 @@ int main()
                 {
                     musica = SMOOTH;
                 }
+                else if (cursorY == 9)
+                {
+                    musica = PHATASY;
+                }
                 state = MUSICA;
             }
             break;
@@ -319,11 +325,10 @@ int main()
                 {
                     VDP_resetScreen();
                     // VDP_setPlaneSize(32, 64, TRUE);
-                    VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
+                    VDP_setScrollingMode(HSCROLL_TILE, VSCROLL_PLANE);
 
                     VDP_drawImageEx(BG_A, &blank, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, 0), 0, 0, FALSE, TRUE);
                     VDP_drawImageEx(BG_B, &bg_musica, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, blank.tileset->numTile), 0, 0, FALSE, TRUE);
-                    
                     
                     VDP_setPalette(PAL3, Mult.palette->data);
                     VDP_setPalette(PAL1, bg_musica.palette->data);
@@ -468,6 +473,17 @@ int main()
                         delay = delay_smooth;
                         loops = loops_smooth;
                         break;
+                    
+                     case PHATASY:
+                        notas = notas_phantasy;
+                        tempos = tempos_phantasy;
+                        tamanho_musica = tamanho_phantasy;
+                        velocidade = velocidade_phantasy;
+                        duracoes = duracao_phantasy;
+                        musica_xgm = phantasy_music;
+                        delay = delay_phantasy;
+                        loops = loops_phantasy;
+                        break;
 
                     default:
                         break;
@@ -534,6 +550,10 @@ int main()
                 placar = placar + multiplicador;
                 if (multiplicador < 4)
                 {
+                    if(vu->frameInd == 10)
+                    {
+                        SPR_nextFrame(vu);
+                    }
                     consecutivas++;
                     SPR_nextFrame(vu);
 
@@ -541,7 +561,6 @@ int main()
                     {
                         multiplicador++;
                         SPR_nextFrame(mult_s);
-                        SPR_nextFrame(vu);
                         consecutivas = 0;
                     }
 
@@ -627,12 +646,14 @@ int main()
                 SPR_setFrame(btr2, 0);
             }
 
-            // yOffsetBg -= velocidade;
-            // if (yOffsetBg < 0)
-            // {
-            //     yOffsetBg += 512;
-            // }
+            yOffsetBg -= 1;
+            if (yOffsetBg < 0)
+            {
+                yOffsetBg += 5120;
+            }
             // VDP_setVerticalScroll(BG_A, yOffsetBg);
+            memsetU16(xOffsetsky, yOffsetBg/10, 9);
+            // VDP_setHorizontalScrollTile(BG_A, 0, xOffsetsky, 9, DMA);
 
             // draw screen
             sprintf(text, "%05d", placar);
@@ -853,6 +874,7 @@ int main()
         SPR_update();
         // KLog_S1("sprites: \0", SPR_getNumActiveSprite());
         SYS_doVBlankProcess();
+        // VDP_showFPS(0);
     }
     return (0);
 }
