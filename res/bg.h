@@ -16,5 +16,6 @@ extern const Image zelda_cover;
 extern const Image sor_conver;
 extern const Image guile_cover;
 extern const Image alterd_cover;
+extern const Image moonwalker_conver;
 
 #endif // _RES_BG_H_

@@ -168,7 +168,6 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                     SPR_releaseSprite(ptr->sprite);
                     MEM_free(ptr);
                     update = TRUE;
-                    // KLog("removendo do inicio\0");
                 }
                 else // esta removendo do meio da lista
                 {
@@ -177,7 +176,6 @@ s16 atualizaPosicao_Nota(u8 velocidade, s16 placar)
                     MEM_free(ptr); // Libera a area do nodo
                     ptr = antes->prox;
                     update = TRUE;
-                    // KLog("removendo do meio\0");
                 }
             }
             else
@@ -303,22 +301,42 @@ s16 atualizaPosicao_Barra(u8 velocidade, s16 placar)
                 else
                 {
                     SPR_setPosition(ptr->sprite,  ptr->x, ptr->y);
-                }             
-                if(ptr->duracao > 0 && ptr->y == 8 + ALTURA_PISTA)
+                }
+                if( velocidade == 3)
                 {
-                    if(ptr->tipo == AMARELA)
+                    if(ptr->duracao > 0 && ptr->y == 6 + ALTURA_PISTA)
                     {
-                        Insere_Barra(SPR_addSprite(&barraY , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_B_X_INICIO, ALTURA_PISTA, AMARELA, ptr->duracao-45);
-                    }
-                    if(ptr->tipo == VERDE)
-                    {
-                        Insere_Barra(SPR_addSprite(&barraG , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, ALTURA_PISTA, VERDE, ptr->duracao-45);
-                    }
-                    if(ptr->tipo == VEMELHA)
-                    {
-                        Insere_Barra(SPR_addSprite(&barraR , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_B_X_INICIO, ALTURA_PISTA, VEMELHA, ptr->duracao-45);
+                        if(ptr->tipo == AMARELA)
+                        {
+                            Insere_Barra(SPR_addSprite(&barraY , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_B_X_INICIO, ALTURA_PISTA, AMARELA, ptr->duracao-45);
+                        }
+                        if(ptr->tipo == VERDE)
+                        {
+                            Insere_Barra(SPR_addSprite(&barraG , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, ALTURA_PISTA, VERDE, ptr->duracao-45);
+                        }
+                        if(ptr->tipo == VEMELHA)
+                        {
+                            Insere_Barra(SPR_addSprite(&barraR , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_B_X_INICIO, ALTURA_PISTA, VEMELHA, ptr->duracao-45);
+                        }
                     }
                 }
+                else{
+                    if(ptr->duracao > 0 && ptr->y == 8 + ALTURA_PISTA)
+                    {
+                        if(ptr->tipo == AMARELA)
+                        {
+                            Insere_Barra(SPR_addSprite(&barraY , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), AMARELO_B_X_INICIO, ALTURA_PISTA, AMARELA, ptr->duracao-45);
+                        }
+                        if(ptr->tipo == VERDE)
+                        {
+                            Insere_Barra(SPR_addSprite(&barraG , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), ptr->x, ALTURA_PISTA, VERDE, ptr->duracao-45);
+                        }
+                        if(ptr->tipo == VEMELHA)
+                        {
+                            Insere_Barra(SPR_addSprite(&barraR , ptr->x, ALTURA_PISTA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE)), VEMELHO_B_X_INICIO, ALTURA_PISTA, VEMELHA, ptr->duracao-45);
+                        }
+                    }
+                }             
                 if(ptr->y > ALTURA_MIRA - 5 && ptr->y < ALTURA_MIRA + 7 )
                 {
                     u16 JOY1 = JOY_readJoypad(JOY_1);
