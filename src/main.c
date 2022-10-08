@@ -62,8 +62,9 @@ int main()
     JOY_setEventHandler(&controle_Handler);
 
     s16 placar = 0;
-    u8 consecutivas = 0;
+    s8 consecutivas = 0;
     u8 multiplicador = 1;
+    bool perdeu = FALSE;
 
     u32 init_time = getTick();
     u32 pause_time = 0;
@@ -570,8 +571,20 @@ int main()
             {
                 SPR_setFrame(vu, 0);
                 SPR_setFrame(mult_s, 0);
-                consecutivas = 0;
-                multiplicador = 1;
+                KLog_S2("consecutivas: ",consecutivas," multiplicador: ", multiplicador);
+                if(consecutivas < 1 && multiplicador == 1)
+                {
+                    consecutivas --;
+                }
+                else
+                {
+                    consecutivas = 0;
+                    multiplicador = 1;
+                }
+                if(consecutivas == -5)
+                {
+                    perdeu = TRUE;
+                }
             }
 
             esconde_fogo();
@@ -659,9 +672,10 @@ int main()
             sprintf(text, "%05d", placar);
             VDP_drawText(text, 34, PLACAR_Y);
 
-            if(notas_faltando  == 0 && getTick() - final_time > 1000)
+            if((notas_faltando  == 0 && getTick() - final_time > 1000) || perdeu)
             {
                 state = FIM_MUSICA;
+                perdeu = FALSE;
 
                 limpa_listas();
                 SPR_releaseSprite(btr2);
