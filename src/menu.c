@@ -38,8 +38,7 @@ void mostra_menu_inicial()
 
 void mostra_menu_pausa()
 {
-    int i;
-    for(i = 0; i < NUM_OPCOES_PAUSA; i++)
+    for(u8 i = 0; i < NUM_OPCOES_PAUSA; i++)
     {
         VDP_drawText(opcoes_pause[i].texto, opcoes_pause[i].x, opcoes_pause[i].y);
     }
@@ -47,8 +46,7 @@ void mostra_menu_pausa()
 
 void mostra_menu(const Opcao *opcoes, u8 tamanho)
 {
-    u8 i;
-    for(i = 0; i < tamanho; i++)
+    for(u8 i = 0; i < tamanho; i++)
     {
         VDP_drawText(opcoes[i].texto, opcoes[i].x, opcoes[i].y);
     }

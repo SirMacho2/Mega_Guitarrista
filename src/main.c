@@ -101,7 +101,7 @@ int main()
     const u16 k7_colors[] = {0x02e, 0xa00, 0x06a, 0x0a0};
     u8 color_index;
     
-    s16 offset_mask [28] = {19, 17, 15, 14, 12, 10, 9, 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 6, 6, 7, 8, 9, 10, 12, 14, 15, 17, 19};
+    const s16 offset_mask [28] = {19, 17, 15, 14, 12, 10, 9, 8, 7, 6, 6, 5, 5, 5, 5, 5, 5, 6, 6, 7, 8, 9, 10, 12, 14, 15, 17, 19};
 
     while (1)
     {
@@ -130,16 +130,16 @@ int main()
                 // VDP_clearPlane(BG_A, TRUE);
                 // VDP_setVerticalScroll(BG_A, 0);
                 VDP_resetScreen();
-                VDP_setPaletteColors(0, (u16 *)palette_black, 64); // set all palettes to black
+                PAL_setColors(0, (u16 *)palette_black, 64, DMA); // set all palettes to black
                 
-                VDP_setPalette(PAL3, Cursor.palette->data);
+                PAL_setPalette(PAL3, Cursor.palette->data, DMA);
 
                 mostra_menu_inicial();
                 cursor = SPR_addSprite(&Cursor, 10 * 8, 14 * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
                 state_anterior = state;
                 VDP_drawImageEx(BG_A, &concert, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
                 PAL_fadeInPalette(PAL0, concert.palette->data, 20, FALSE);
-                VDP_setPalette(PAL0, concert.palette->data);
+                PAL_setPalette(PAL0, concert.palette->data, DMA);
                 PAL_setColor(15, RGB24_TO_VDPCOLOR(0xffFFFF));
             }
             if (J1S)
@@ -160,7 +160,7 @@ int main()
                 VDP_clearPlane(BG_A, TRUE);
                 VDP_clearPlane(BG_B, TRUE);
                 VDP_setVerticalScroll(BG_A, yOffsetBg);
-                VDP_setPaletteColors(0, (u16 *)palette_black, 64); // set all palettes to black
+                PAL_setColors(0, (u16 *)palette_black, 64, DMA); // set all palettes to black
                 PAL_setColor(15, 0x00e); // set color text red
                 
                 cursorY = 0;
@@ -171,9 +171,9 @@ int main()
                 VDP_drawImageEx(BG_A, &k7, TILE_ATTR(PAL2, FALSE, FALSE, FALSE), 15, 7, FALSE, TRUE);
                 VDP_drawImageEx(BG_B, &sonic_cover, TILE_ATTR_FULL(PAL3, TRUE, FALSE, FALSE, k7.tileset->numTile), 1, 7, FALSE, TRUE);
 
-                VDP_setPalette(PAL1, k7.palette->data);
-                VDP_setPalette(PAL2, k7.palette->data);
-                VDP_setPalette(PAL3, sonic_cover.palette->data);
+                PAL_setPalette(PAL1, k7.palette->data, DMA);
+                PAL_setPalette(PAL2, k7.palette->data, DMA);
+                PAL_setPalette(PAL3, sonic_cover.palette->data, DMA);
                 VDP_drawText(opcoes_musicas[cursorY].texto, opcoes_musicas[cursorY].x,opcoes_musicas[cursorY ].y);
                 VDP_drawText(opcoes_musicas[cursorY + 1].texto, opcoes_musicas[cursorY + 1].x, 26);
                 menu_movendo = 0;
@@ -208,7 +208,7 @@ int main()
                 PAL_setColor(19, k7_colors[color_index]);
                 VDP_clearPlane(BG_B, TRUE);
                 VDP_drawImageEx(BG_B, opcoes_musicas[cursorY].image, TILE_ATTR_FULL(PAL3, TRUE, FALSE, FALSE, k7.tileset->numTile), 1, 7, FALSE, TRUE);
-                VDP_setPalette(PAL3, opcoes_musicas[cursorY].image->palette->data);      
+                PAL_setPalette(PAL3, opcoes_musicas[cursorY].image->palette->data, DMA);      
             }
             if (J1CIMA)
             {
@@ -237,7 +237,7 @@ int main()
                 PAL_setColor(19, k7_colors[color_index]);  
                 VDP_clearPlane(BG_B, TRUE);
                 VDP_drawImageEx(BG_B, opcoes_musicas[cursorY].image, TILE_ATTR_FULL(PAL3, TRUE, FALSE, FALSE, k7.tileset->numTile), 1, 7, FALSE, TRUE);
-                VDP_setPalette(PAL3, opcoes_musicas[cursorY].image->palette->data);   
+                PAL_setPalette(PAL3, opcoes_musicas[cursorY].image->palette->data, DMA);   
             }
             if(menu_movendo)
             {
@@ -330,12 +330,12 @@ int main()
                     VDP_drawImageEx(BG_A, &blank, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, 0), 0, 0, FALSE, TRUE);
                     VDP_drawImageEx(BG_B, &bg_musica, TILE_ATTR_FULL(PAL1, FALSE, FALSE, FALSE, blank.tileset->numTile), 0, 0, FALSE, TRUE);
                     
-                    VDP_setPalette(PAL3, Mult.palette->data);
-                    VDP_setPalette(PAL1, bg_musica.palette->data);
-                    VDP_setPalette(PAL2, btR2.palette->data);
-                    VDP_setPalette(PAL0, Fogo.palette->data);
-                    VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xff0000));
-                    VDP_setPaletteColor(0, 0);
+                    PAL_setPalette(PAL3, Mult.palette->data, DMA);
+                    PAL_setPalette(PAL1, bg_musica.palette->data, DMA);
+                    PAL_setPalette(PAL2, btR2.palette->data, DMA);
+                    PAL_setPalette(PAL0, Fogo.palette->data, DMA);
+                    PAL_setColor(15, RGB24_TO_VDPCOLOR(0xff0000));
+                    PAL_setColor(0, 0);
                     VDP_setBackgroundColor(0);
                     // bts_marca
                     btr2 = SPR_addSprite(&btR2, VEMELHO_X+1, ALTURA_MIRA, TILE_ATTR(PAL2, FALSE, FALSE, FALSE));
@@ -677,7 +677,7 @@ int main()
                 SPR_releaseSprite(guitarrista);
                 VDP_clearTextLine(PLACAR_Y);
 
-                XGM_stopPlay(musica_xgm);
+                XGM_stopPlay();
 
                 SPR_reset();
                 MEM_pack();
@@ -690,11 +690,11 @@ int main()
                 VDP_setTextPlane(BG_A);
                 state_anterior = state;
                 mostra_menu_pausa();
-                // VDP_setPalette(PAL3, Cursor.palette->data);
+                // PAL_setPalette(PAL3, Cursor.palette->data, DMA);
                 cursorY = 14;
                 cursorX = 17 * 8;
                 cursor = SPR_addSprite(&Cursor, cursorX, cursorY * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
-                XGM_pausePlay(musica_xgm);
+                XGM_pausePlay();
                 guitarrista->timer = 0;
                 fogoR->timer = 0;
                 fogoG->timer = 0;
@@ -746,7 +746,7 @@ int main()
                     state = MUSICA;
                     resume = 1;
                     init_time = getTick() - pause_time + init_time;
-                    XGM_resumePlay(musica_xgm);
+                    XGM_resumePlay();
                     guitarrista->timer = 1;
                     fogoR->timer = 1;
                     fogoG->timer = 1;
@@ -770,7 +770,7 @@ int main()
                     SPR_releaseSprite(guitarrista);
                     VDP_clearTextLine(PLACAR_Y);
 
-                    XGM_stopPlay(musica_xgm);
+                    XGM_stopPlay();
 
                     SPR_reset();
                     MEM_pack();
@@ -792,7 +792,7 @@ int main()
                     SPR_releaseSprite(mult_s);
                     SPR_releaseSprite(guitarrista);
                     
-                    XGM_stopPlay(musica_xgm);
+                    XGM_stopPlay();
 
                     SPR_reset();
                     MEM_pack();
@@ -804,21 +804,21 @@ int main()
             {
                 VDP_setTextPlane(BG_B);
                 VDP_resetScreen();
-                VDP_setPaletteColors(0, (u16 *)palette_black, 64); // set all palettes to black
+                PAL_setColors(0, (u16 *)palette_black, 64, DMA); // set all palettes to black
                 state_anterior = state;
                 mostra_menu(opcoes_fim, NUM_OPCOES_FIM);
-                VDP_setPalette(PAL3, Cursor.palette->data);
+                PAL_setPalette(PAL3, Cursor.palette->data, DMA);
                 cursorY = 14;
                 cursorX = 17 * 8;
                 cursor = SPR_addSprite(&Cursor, cursorX, cursorY * 8, TILE_ATTR(PAL3, FALSE, FALSE, FALSE));
-                XGM_stopPlay(musica_xgm);
+                XGM_stopPlay();
 
                 VDP_drawImageEx(BG_A, &concert, TILE_ATTR(PAL0, FALSE, FALSE, FALSE), 0, 0, FALSE, TRUE);
-                VDP_setPalette(PAL0, concert.palette->data);
+                PAL_setPalette(PAL0, concert.palette->data,DMA);
 
                 sprintf(text, "Seu placar foi: %05d", placar);
                 VDP_drawText(text, 10, 11);
-                VDP_setPaletteColor(15, RGB24_TO_VDPCOLOR(0xffFFFF));
+                PAL_setColor(15, RGB24_TO_VDPCOLOR(0xffFFFF));
             }
             if (J1BAIXO)
             {
@@ -874,7 +874,8 @@ int main()
         SPR_update();
         // KLog_S1("sprites: \0", SPR_getNumActiveSprite());
         SYS_doVBlankProcess();
-        // VDP_showFPS(0);
+        VDP_showFPS(0);
+        VDP_showCPULoad();
     }
     return (0);
 }
